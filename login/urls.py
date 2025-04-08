@@ -1,7 +1,12 @@
 from django.urls import path
-from login.views import (index, criar_user)
+from login import views
+from login.views import (login,conta,cadastrar_usuario,loja,login_usuario)
 
 urlpatterns = [
-    path('',index, name='index'),
-    path('criar-user/',criar_user,name='criar_user')
+    #rota, view responsavel, nome de referencia
+    path('', views.login, name='login'),  # Página inicial: login
+    path('cadastro/', conta, name='conta'),  # Formulário de cadastro
+    path('usuarios/', cadastrar_usuario, name='cadastrar_usuario'),  # POST de cadastro
+    path('login_usuario/', login_usuario, name='login_usuario'),  # POST de login
+    path('loja/', loja, name='loja'),  # Página da loja após login
 ]
