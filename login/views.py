@@ -5,6 +5,7 @@ from .models import Create_User
 from django.contrib.auth.hashers import make_password #criptografar senha
 from django.contrib import messages  # ✅ Esse é o import correto
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth import logout
 
 
 
@@ -55,6 +56,7 @@ def login_usuario(request):
     if request.method == "POST":
         email = request.POST.get("email")
         senha = request.POST.get("senha")
+        print("Tentativa de login:", email, senha)
 
         try:
             usuario = Create_User.objects.get(email=email)
@@ -68,8 +70,15 @@ def login_usuario(request):
                 return redirect('login')
 
         except Create_User.DoesNotExist:
-            messages.error(request, "Usuário não encontrado.")
+            messages.error(request, "E-mail não cadastrado.")
             return redirect('login')
 
     return redirect('login')  # se GET
+
+def logout_view(request):
+    logout(request)
+    storage = messages.get_messages(request)
+    for _ in storage:
+        pass  # isso limpa as mensagens pendentes
+    return redirect('login')
     

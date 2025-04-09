@@ -5,7 +5,6 @@ from django.contrib.auth.base_user import BaseUserManager
 
 
 class UsuarioManager(BaseUserManager):
-
     def create_user(self, email, nome, senha=None, **extra_fields):
         if not email:
             raise ValueError('O email deve ser fornecido.')
