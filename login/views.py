@@ -1,11 +1,12 @@
 from hashlib import scrypt
 from pyexpat.errors import messages
 from django.shortcuts import redirect, render
-from .models import Create_User
+from .models import Create_User, Pedido
 from django.contrib.auth.hashers import make_password #criptografar senha
 from django.contrib import messages  # ✅ Esse é o import correto
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import logout
+from .forms import PedidoForm
 
 
 
@@ -16,14 +17,22 @@ def conta(request):
     return render(request,'login/cadastro.html')
 
 def loja(request):
+    pedidos = Pedido.objects.all()
     usuario = None
+
     usuario_id = request.session.get('usuario_id')
     if usuario_id:
         try:
             usuario = Create_User.objects.get(id=usuario_id)
         except Create_User.DoesNotExist:
             messages.error(request, "Usuário não encontrado.")
-    return render(request, 'loja/home.html', {"usuario": usuario})
+
+    context = {
+        'usuario': usuario,
+        'pedidos': pedidos,
+    }
+
+    return render(request, 'loja/home.html', context)
 
 def cadastrar_usuario(request):
     if request.method == "POST":
@@ -82,3 +91,22 @@ def logout_view(request):
         pass  # isso limpa as mensagens pendentes
     return redirect('login')
     
+#formulario para o administrator adicionar novos pedidos
+def criar_pedido(request):
+    if request.method == 'POST':
+        form = PedidoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Pedido cadastrado com sucesso!')
+            #return redirect('/loja')
+    else:
+        form = PedidoForm()
+    return render(request, 'loja/add_pedido.html', {'form': form})
+
+# def listar_pedidos(request):
+#     pedidos = Pedido.objects.all()
+#     return render(request, 'loja/listar_pedido.html', {'pedidos': pedidos})
+    
+# def home(request):
+#     pedidos = Pedido.objects.all()
+#     return render(request, 'loja/home.html', {'pedidos': pedidos})

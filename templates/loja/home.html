@@ -1,6 +1,4 @@
 {% include "navbar/base.html" %}
-
-
 {% block content %}
 
 <style>
@@ -46,22 +44,31 @@
       <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
         aria-label="Slide 3"></button>
     </div>
+    
     <div class="carousel-inner mt-4" style="background-color: #FFE4E1; height: 500px;">
       <div class="carousel-item active">
-        <img src="/static/foto1.jpeg" class="d-block mx-auto img-fluid" style="max-width: 350px;" alt="...">
+        <img src="/media/pedidos_fotos/cesta-basica.jpeg" class="d-block mx-auto img-fluid" style="max-width: 650px;"
+          alt="...">
       </div>
+
       <div class="carousel-item">
-        <img src="/static/cesta-basica.jpeg" class="d-block mx-auto img-fluid" style="max-width: 600px;" alt="...">
+        <img src="/media/pedidos_fotos/cesta-basica.jpeg" class="d-block mx-auto img-fluid" style="max-width: 650px;"
+          alt="...">
       </div>
+
       <div class="carousel-item">
-        <img src="/static/foto2.jpeg" class="d-block mx-auto img-fluid" style="max-width: 350px;" alt="...">
+        <img src="/media/pedidos_fotos/cesta-basica.jpeg" class="d-block mx-auto img-fluid" style="max-width: 650px;"
+          alt="...">
       </div>
     </div>
+
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
       data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
+
     </button>
+
     <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
       data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
@@ -85,37 +92,32 @@
     </div>
   </div>
 
-  <div class="d-flex flex-wrap justify-content-center gap-4">
-    <div class="card" style="width: 18rem;">
-      <img src="/static/foto3.jpeg" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Caixa presente</h5>
-        <p class="card-text"></p>
-        <a href="#" class="btn btn-outline-info">Comprar</a>
-      </div>
-    </div>
+
+  {% for pedido in pedidos %}
+  {% if forloop.first or forloop.counter0|divisibleby:4 %}
+    <div class="row justify-content-center mb-2">
+  {% endif %}
   
-    <div class="card" style="width: 18rem;">
-      <img src="/static/foto4.jpeg" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Caixa presente</h5>
-        <p class="card-text"></p>
-        <a href="#" class="btn btn-outline-info">Comprar</a>
-      </div>
-    </div>
-  
-    <div class="card" style="width: 18rem;">
-      <img src="/static/foto5.png" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">Caixa presente</h5>
-        <p class="card-text"></p>
-        <a href="#" class="btn btn-outline-info">comprar</a>
+    <div class="col-md-2 d-flex justify-content-center">
+      <div class="card" style="width: 18rem;">
+        <img src="{{ pedido.foto.url }}" class="card-img-top" alt="Imagem do pedido">
+        <div class="card-body">
+          <h5 class="card-title">{{pedido.categoria}}</h5>
+          <p class="card-text">{{ pedido.descricao }}</p>
+          <p class="card-text fw-bold">R$ {{ pedido.valor }}</p>
+          <a href="#" class="btn btn-outline-info">Comprar</a>
+        </div>
       </div>
     </div>
 
-    
+  {% if forloop.counter|divisibleby:4 or forloop.last %}
+    </div>
+  {% endif %}
+{% endfor %}
+
+
   </div>
 
 
+  {% endblock %}
 </body>
-{% endblock %}

@@ -15,7 +15,7 @@ class UsuarioManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-class Create_User(AbstractBaseUser, PermissionsMixin):  # ✅ Troque models.Model
+class Create_User(AbstractBaseUser, PermissionsMixin):  
     nome = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     telefone = models.CharField(max_length=20, null=True, blank=True)
@@ -30,6 +30,19 @@ class Create_User(AbstractBaseUser, PermissionsMixin):  # ✅ Troque models.Mode
 
     def __str__(self):
         return self.nome
+
+
+#classe de pedidos.
+class Pedido(models.Model):
+    categoria = models.CharField(max_length=50,null=True, blank=True)
+    foto = models.ImageField(upload_to='static/pedidos_fotos')
+    descricao = models.TextField()
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    data_criacao = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"{self.descricao[:30]} - R%{self.valor}"
     
 
 
