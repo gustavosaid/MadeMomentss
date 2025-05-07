@@ -7,6 +7,7 @@ from django.contrib import messages  # ✅ Esse é o import correto
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import logout
 from .forms import PedidoForm
+from django.shortcuts import get_object_or_404
 
 
 
@@ -102,6 +103,27 @@ def criar_pedido(request):
     else:
         form = PedidoForm()
     return render(request, 'loja/add_pedido.html', {'form': form})
+
+
+#leva pra pagina de detalhes do produto ao clicar em comprar
+def detalhe_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    return render(request, 'loja/detalhe_pedido.html', {'pedido': pedido})
+
+
+#leva pra pagina de adiconar ao carrinho e escolher a quantidade que vai ser comprada
+def add_carrinho(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+
+    if request.method == 'POST':
+        quantidade = int(request.POST.get('quantidade', 1))
+        # Aqui você pode adicionar lógica para adicionar ao carrinho
+        messages.success(request, f'{quantidade}x "{pedido.descricao}" adicionado ao carrinho!')
+        return redirect('loja')
+
+    return render(request, 'loja/add_carrinho.html', {'pedido': pedido})
+
+
 
 # def listar_pedidos(request):
 #     pedidos = Pedido.objects.all()

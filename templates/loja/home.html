@@ -105,7 +105,7 @@
           <h5 class="card-title">{{pedido.categoria}}</h5>
           <p class="card-text">{{ pedido.descricao }}</p>
           <p class="card-text fw-bold">R$ {{ pedido.valor }}</p>
-          <a href="#" class="btn btn-outline-info">Comprar</a>
+          <a href="{% url 'detalhe_pedido' pedido.id %}" class="btn btn-outline-info">Comprar</a>
         </div>
       </div>
     </div>

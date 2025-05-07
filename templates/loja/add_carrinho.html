@@ -1,0 +1,35 @@
+{% extends "navbar/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh; background-color: #FFE4E1;">
+    <div class="text-center" style="background-color: white; padding: 30px; border-radius: 12px; max-width: 600px; width: 100%;">
+        <h3 class="mb-3">{{ pedido.categoria }}</h3>
+        <img src="{{ pedido.foto.url }}" class="img-fluid mb-3" style="max-height: 400px;">
+        <p>{{ pedido.descricao }}</p>
+        <h4 class="fw-bold mb-4">R$ {{ pedido.valor }}</h4>
+
+        <form method="POST" action="{% url 'add_carrinho' pedido.id %}">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label for="quantidade" class="form-label fw-bold">Quantidade:</label>
+                <input type="number" name="quantidade" id="quantidade" value="1" min="1" class="form-control text-center" style="max-width: 120px; margin: 0 auto;">
+            </div>
+
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'detalhe_pedido' pedido.id %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Voltar
+                </a>
+
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-cart-plus"></i> Adicionar ao carrinho
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
