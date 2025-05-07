@@ -117,7 +117,6 @@ def add_carrinho(request, pedido_id):
 
     if request.method == 'POST':
         quantidade = int(request.POST.get('quantidade', 1))
-        # Aqui você pode adicionar lógica para adicionar ao carrinho
         messages.success(request, f'{quantidade}x "{pedido.descricao}" adicionado ao carrinho!')
         return redirect('loja')
 
