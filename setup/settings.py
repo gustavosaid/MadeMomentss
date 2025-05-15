@@ -14,6 +14,7 @@ from pathlib import Path, os
 from dotenv import load_dotenv
 
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',  # ou http:// se não estiver usando HTTPS
+]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -69,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'login.context_processors.carrinho_contexto',
             ],
         },
     },
@@ -112,7 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'utc'
+TIME_ZONE = 'America/Sao_Paulo'
 
 USE_I18N = True
 

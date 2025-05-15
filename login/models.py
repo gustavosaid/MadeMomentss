@@ -43,6 +43,11 @@ class Pedido(models.Model):
 
     def __str__(self):
         return f"{self.descricao[:30]} - R%{self.valor}"
+
+class Carrinho(models.Model):
+    usuario = models.ForeignKey(Create_User, on_delete=models.CASCADE)
+    produto = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    quantidade = models.IntegerField(default=1)
     
 
 

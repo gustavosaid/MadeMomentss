@@ -7,7 +7,8 @@ from django.contrib import messages  # ✅ Esse é o import correto
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import logout
 from .forms import PedidoForm
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -35,6 +36,7 @@ def loja(request):
 
     return render(request, 'loja/home.html', context)
 
+@csrf_exempt
 def cadastrar_usuario(request):
     if request.method == "POST":
         nome = request.POST.get("nome")
@@ -62,6 +64,7 @@ def cadastrar_usuario(request):
 
     return redirect('conta')
 
+@csrf_exempt
 def login_usuario(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -93,6 +96,7 @@ def logout_view(request):
     return redirect('login')
     
 #formulario para o administrator adicionar novos pedidos
+@csrf_exempt
 def criar_pedido(request):
     if request.method == 'POST':
         form = PedidoForm(request.POST, request.FILES)
@@ -106,21 +110,78 @@ def criar_pedido(request):
 
 
 #leva pra pagina de detalhes do produto ao clicar em comprar
+@csrf_exempt
 def detalhe_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
     return render(request, 'loja/detalhe_pedido.html', {'pedido': pedido})
 
 
-#leva pra pagina de adiconar ao carrinho e escolher a quantidade que vai ser comprada
-def add_carrinho(request, pedido_id):
-    pedido = get_object_or_404(Pedido, id=pedido_id)
 
+
+
+
+#leva pra pagina de adiconar ao carrinho e escolher a quantidade que vai ser comprada
+@csrf_exempt
+def add_carrinho(request, pedido_id):
     if request.method == 'POST':
         quantidade = int(request.POST.get('quantidade', 1))
-        messages.success(request, f'{quantidade}x "{pedido.descricao}" adicionado ao carrinho!')
-        return redirect('loja')
+        pedido = get_object_or_404(Pedido, id=pedido_id)
 
-    return render(request, 'loja/add_carrinho.html', {'pedido': pedido})
+        carrinho = request.session.get('carrinho', {})
+
+        # Armazena o pedido no carrinho com a quantidade
+        carrinho[str(pedido_id)] = carrinho.get(str(pedido_id), 0) + quantidade
+
+        request.session['carrinho'] = carrinho
+
+        # ✅ Redireciona para a página do carrinho após adicionar
+        return redirect('ver_carrinho')  # Certifique-se de que essa URL existe
+
+    # # ✅ Redireciona caso o método não seja POST
+    # return redirect('home')  # ou qualquer página que faça sentido
+
+def ver_carrinho(request):
+    carrinho = request.session.get('carrinho', {})
+    itens = []
+    total = 0 
+
+    for pedido_id, quantidade in carrinho.items():
+        pedido = get_object_or_404(Pedido, id=pedido_id)
+        subtotal = pedido.valor * quantidade
+        total += subtotal
+        itens.append({
+            'pedido': pedido,
+            'quantidade': quantidade,
+            'subtotal': quantidade * pedido.valor,
+        })
+
+    context = {
+        'itens': itens,
+        'total_geral': total,
+    }
+
+    return render(request, 'loja/itens_carrinho.html', context)
+
+@csrf_exempt
+def remover_carrinho(request, pedido_id):
+    carrinho = request.session.get('carrinho', {})
+
+    if str(pedido_id) in carrinho:
+        del carrinho[str(pedido_id)]
+        request.session['carrinho'] = carrinho
+        
+
+    return redirect('ver_carrinho')
+
+def confirma_pagamento(request):
+    return render(request,'loja/mercado_pago.html')
+
+# def carrinho_context(request):
+#     if request.user.is_authenticated:
+#         carrinho = Carrinho.objects.filter(usuario=request.user)
+#     else:
+#         carrinho = []
+#         return {'itens_carrinho': carrinho}
 
 
 
