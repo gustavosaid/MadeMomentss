@@ -1,0 +1,82 @@
+import mercadopago
+
+sdk = mercadopago.SDK("APP_USR-196813989457405-052710-78cdc9696d2d484a8350fd468c79024b-482306893")
+
+request_options = mercadopago.config.RequestOptions()
+request_options.custom_headers = {
+    'x-idempotency-key': '<SOME_UNIQUE_VALUE>'
+}
+
+payment_data = {
+    "items": [
+        {
+            "id": 1,
+            "title": "Cesta Basica",
+            "quantity": 1,
+            "currency_id": "BRL",
+            "unit_price": 74.90
+        }
+    ],
+    "back_urls": {
+        "success": "http://127.0.0.1:8000/compracerta/",
+        "pending": "http://127.0.0.1:8000/compraerrada/",
+        "failure": "http://127.0.0.1:8000/compraerrada/",
+    },
+    #"auto_return" : "all"
+}
+
+result = sdk.preference().create(payment_data)
+payment = result["response"]
+
+print(payment)
+
+
+
+
+
+
+
+----------------------------------
+
+   import mercadopago
+
+def gerar_link_pagamento(request):
+    sdk = mercadopago.SDK("APP_USR-196813989457405-052710-78cdc9696d2d484a8350fd468c79024b-482306893")
+
+    request_options = mercadopago.config.RequestOptions()
+    request_options.custom_headers = {
+        'x-idempotency-key': '<SOME_UNIQUE_VALUE>'
+    }
+
+    payment_data = {
+        "items": [
+            {
+                "id": 1,
+                "title": "Cesta Basica",
+                "quantity": 1,
+                "currency_id": "BRL",
+                "unit_price": 0.01
+            }
+        ],
+        "back_urls": {
+            "success": "http://127.0.0.1:8000/compracerta/",
+            "pending": "http://127.0.0.1:8000/compraerrada/",
+            "failure": "http://127.0.0.1:8000/pagamento_errado/",
+        },
+        "auto_return" : "all"
+    }
+    result = sdk.preference().create(payment_data)
+    payment = result["response"]
+
+    #print(payment)
+    link_pagamento = payment["init_point"]
+    return link_pagamento
+
+
+
+
+usuario teste : TESTUSER155931766  
+senha teste : K7UgbKFDdU
+
+
+abrir painel de vendas: https://www.mercadopago.com.br/home

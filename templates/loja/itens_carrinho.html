@@ -2,73 +2,128 @@
 {% block content %}
 
 <style>
+    body {
+        background-color: #fff0f5; /* rosa claro no fundo */
+    }
+
+    .cart-card {
+        background-color: #ffffff;
+        border: 1px solid #f8d7da;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .cart-header {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #d63384; /* rosa escuro */
+        margin-bottom: 1rem;
+    }
+
+    .product-img {
+        height: 100px;
+        width: auto;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .badge-subtotal {
+        background-color: #f8bbd0;
+        color: #6f042e;
+    }
+
+    .badge-total {
+        background-color: #f06292;
+        color: white;
+    }
+
+    .btn-outline-danger {
+        border-color: #e83e8c;
+        color: #e83e8c;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #e83e8c;
+        color: white;
+    }
+
+    .btn-primary {
+        background-color: #d63384;
+        border-color: #d63384;
+    }
+
+    .btn-primary:hover {
+        background-color: #c2185b;
+        border-color: #c2185b;
+    }
+
+    .btn-success {
+        background-color: #f06292;
+        border-color: #f06292;
+    }
+
+    .btn-success:hover {
+        background-color: #ec407a;
+        border-color: #ec407a;
+    }
 
 </style>
 
-<body>
+<div class="container mt-5">
+    <div class="cart-header">🛍️ Meu Carrinho</div>
+    <hr>
 
+    {% if itens %}
+        {% for item in itens %}
+        <div class="cart-card row align-items-center">
+            <div class="col-md-2 text-center">
+                <img src="{{ item.pedido.foto.url }}" alt="Foto do item" class="product-img">
+            </div>
+            <div class="col-md-6">
+                <h5 class="mb-1">{{ item.pedido.descricao }}</h5>
+                <p class="mb-0">Quantidade: <strong>{{ item.quantidade }}</strong></p>
+                <p class="mb-0">Valor unitário: <strong>R$ {{ item.pedido.valor|floatformat:2 }}</strong></p>
+            </div>
+            <div class="col-md-2 text-center">
+                <span class="badge badge-subtotal fs-6 p-2">Subtotal: R$ {{ item.subtotal|floatformat:2 }}</span>
+            </div>
+            <div class="col-md-2 text-end">
+                <form method="POST" action="{% url 'remover_carrinho' item.pedido.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-trash"></i> Remover
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
 
-    <div class="container mt-5">
-        <h2>Meu Carrinho</h2>
-        <hr>
-        {% if itens %}
-        <ul class="list-group mb-4">
-            {% for item in itens %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <img src="{{ item.pedido.foto.url }}" style="height: 100px; width: auto; margin-right: 20px;">
-                    <div>
-                        <strong>{{ item.pedido.descricao }}</strong><br>
-                        Quantidade: {{ item.quantidade }}<br>
-                        Valor unitário: R$ {{ item.pedido.valor|floatformat:2 }}
-                    </div>
-                </div>
-
-                <div class="d-flex flex-column align-items-end">
-                    <span class="badge bg-primary rounded-pill mb-2">Subtotal: R$ {{item.subtotal|floatformat:2}}</span>
-
-                    <!-- Botão de remover -->
-                    <form method="POST" action="{% url 'remover_carrinho' item.pedido.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="bi bi-trash"></i> Remover
-                        </button>
-                    </form>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
-
-
-
-        <!-- Total geral do carrinho -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4>Total geral:</h4>
-            <span class="badge bg-success rounded-pill fs-5">R$ {{ total_geral|floatformat:2 }}</span>
+        <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm mt-4 border border-pink">
+            <h4 class="mb-0 text-dark">💰 Total geral:</h4>
+            <span class="badge badge-total fs-5 p-2">R$ {{ total_geral|floatformat:2 }}</span>
         </div>
 
-        <!-- Botão voltar -->
-        <div class="text-end">
-            <a href="{% url 'loja' %}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Voltar
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'loja' %}" class="btn btn-primary">
+                <i class="bi bi-arrow-left"></i> Continuar comprando
+            </a>
+            <a href="{% url 'pagar' %}" class="btn btn-success">
+                Finalizar compra <i class="bi bi-arrow-right-circle ms-1"></i>
             </a>
         </div>
 
-        <div class="text-end">
-            <a href="{% url 'confirma_pagamento' %}" class="btn btn-success">
-                <i class="bi bi-arrow-left"></i> Avançar
+    {% else %}
+        <div class="alert alert-warning text-center">
+            Seu carrinho está vazio.
+        </div>
+        <div class="text-center">
+            <a href="{% url 'loja' %}" class="btn btn-primary">
+                <i class="bi bi-cart-plus"></i> Ir para a loja
             </a>
         </div>
+    {% endif %}
+</div>
 
-
-        {% else %}
-        <p>Seu carrinho está vazio.</p>
-        <div class="text-end">
-            <a href="{% url 'loja' %}" class="btn btn-secondary">
-                <i class="bi bi-arrow-left"></i> Voltar
-            </a>
-        </div>
-        {% endif %}
-    </div>
-</body>
 {% endblock %}

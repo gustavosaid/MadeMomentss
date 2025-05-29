@@ -3,12 +3,13 @@ from pyexpat.errors import messages
 from django.shortcuts import redirect, render
 from .models import Create_User, Pedido
 from django.contrib.auth.hashers import make_password #criptografar senha
-from django.contrib import messages  # ✅ Esse é o import correto
+from django.contrib import messages 
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import logout
 from .forms import PedidoForm
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
+from login.api_mercadoPago import gerar_link_pagamento
 
 
 
@@ -173,8 +174,13 @@ def remover_carrinho(request, pedido_id):
 
     return redirect('ver_carrinho')
 
-def confirma_pagamento(request):
-    return render(request,'loja/mercado_pago.html')
+def pagamento_certo(request):
+    return render(request,'loja/mercado_pagoCerta.html')
+
+def pagamento_errado(request):
+    return render(request,'loja/mercado_pagoErrada.html')
+
+
 
 # def carrinho_context(request):
 #     if request.user.is_authenticated:
