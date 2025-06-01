@@ -1,12 +1,13 @@
 from django.urls import path
 from login import views
-from login.views import (login,conta,cadastrar_usuario,loja,login_usuario, logout_view, criar_pedido,
+from login.views import (login_view,conta,cadastrar_usuario,loja,login_usuario, logout_view, criar_pedido,
  add_carrinho,ver_carrinho, remover_carrinho, pagamento_certo, pagamento_errado)
 from login.api_mercadoPago import gerar_link_pagamento
 
+
 urlpatterns = [
     #rota, view responsavel, nome de referencia
-    path('', views.login, name='login'),  # Página inicial: login
+   path('', views.login_view, name='login'),   # Página inicial: login
     path('cadastro/', conta, name='conta'),  # Formulário de cadastro
     path('usuarios/', cadastrar_usuario, name='cadastrar_usuario'),  # POST de cadastro
     path('login/', login_usuario, name='login_usuario'),  # POST de login
@@ -22,6 +23,7 @@ urlpatterns = [
     path('compracerta/', pagamento_certo, name='pagamento_certo'),
     path('compraerrada/', pagamento_errado, name='pagamento_errado'),
     path('pagar/', gerar_link_pagamento, name='pagar'),
+    path('verify-2fa/', views.verify_mfa, name='verify_mfa'),# Verificar código 2FA
 
 #     path('pedidos/', listar_pedidos, name='listar_pedidos'),
 ]

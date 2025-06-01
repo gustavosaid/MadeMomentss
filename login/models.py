@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import  AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
-
+import pyotp
 
 class UsuarioManager(BaseUserManager):
 
@@ -22,6 +22,10 @@ class Create_User(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=20, default='cliente', choices=[('cliente', 'Cliente'), ('admin', 'Admin')])
     ativo = models.BooleanField(default=True)
     criado_em = models.DateTimeField(default=timezone.now)
+
+    # Campos para autenticação 2FA
+    mfa_secret = models.CharField(max_length=16, blank=True, null=True)
+    mfa_enabled = models.BooleanField(default=False)
 
     objects = UsuarioManager()
 

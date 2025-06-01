@@ -10,10 +10,14 @@ from .forms import PedidoForm
 from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.csrf import csrf_exempt
 from login.api_mercadoPago import gerar_link_pagamento
+from django.contrib.auth import login as auth_login
+import pyotp
+import qrcode
+from io import BytesIO
+import base64
 
 
-
-def login(request):
+def login_view(request):
     return render(request,'login/login.html')
 
 def conta(request):
@@ -70,15 +74,31 @@ def login_usuario(request):
     if request.method == "POST":
         email = request.POST.get("email")
         senha = request.POST.get("senha")
-        print("Tentativa de login:", email, senha)
 
         try:
             usuario = Create_User.objects.get(email=email)
 
             if usuario.check_password(senha):
+                if usuario.mfa_enabled:#Se o usuário tem 2FA ativado (mfa_enabled = True):
+
+                    #Gera o QR code chamando a funcao e salva na variavel
+                    img_str = gerar_qrcode_para(usuario)
+
+                    # salva id temporário e passa img para o template
+                    request.session['temp_user_id'] = usuario.id
+                    context = {
+                        'user_id': usuario.id,
+                        'qr_code': img_str,
+                        'usuario': usuario,
+                    }
+                    return render(request, 'login/otp_verify.html', context)
+
+                # Login direto sem 2FA
                 request.session['usuario_id'] = usuario.id
+                auth_login(request, user)
                 messages.success(request, f"Bem-vindo, {usuario.nome}!")
                 return redirect('loja')
+
             else:
                 messages.error(request, "Senha incorreta.")
                 return redirect('login')
@@ -87,7 +107,62 @@ def login_usuario(request):
             messages.error(request, "E-mail não cadastrado.")
             return redirect('login')
 
-    return redirect('login')  # se GET
+    return redirect('login')
+
+@csrf_exempt
+def verify_mfa(request):
+    if request.method == 'POST':
+        #Pegando os dados passados por parametro
+        otp = request.POST.get('otp_code')
+        user_id = request.POST.get('user_id')
+
+        #Busca o usuário no banco
+        try:
+            user = Create_User.objects.get(id=user_id)
+        except Create_User.DoesNotExist:
+            messages.error(request, 'Usuário inválido.')
+            return redirect('login')
+
+        totp = pyotp.TOTP(user.mfa_secret)
+
+        #Cria uma instância TOTP usando o segredo do usuário para verificar o código
+        if totp.verify(otp):
+            #Verifica se o codigo digita ta certo dentro o intervalo se der certo vai para a loja
+            request.session['usuario_id'] = user.id
+            auth_login(request, user)
+            messages.success(request, f"Login com 2FA bem-sucedido!")
+            return redirect('loja')
+        else:
+            messages.error(request, 'Código OTP inválido. Tente novamente.')
+            qr_code = gerar_qrcode_para(user)
+            return render(request, 'login/otp_verify.html', {
+                'user_id': user.id,
+                'usuario': user,
+                'qr_code': qr_code,
+            })
+
+    return redirect('login')
+
+#Define uma função auxiliar para gerar o QR Code
+def gerar_qrcode_para(usuario):
+
+    #Cria a instância TOTP com o segredo do usuário.
+    totp = pyotp.TOTP(usuario.mfa_secret)
+
+    #Gera a URI padrão
+    uri = totp.provisioning_uri(name=usuario.email, issuer_name="MadeMoments")
+
+    #Gera a imagem QR code com a URI
+    qr = qrcode.make(uri)
+    buffered = BytesIO()
+    qr.save(buffered, format="PNG")
+
+    
+    #Codifica a imagem em base64 para ser embutida no HTML.
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    return img_str
+
+
 
 def logout_view(request):
     logout(request)
