@@ -18,10 +18,12 @@ import base64
 
 
 def login_view(request):
-    return render(request,'login/login.html')
+    return render(request, 'login/login.html')
+
 
 def conta(request):
-    return render(request,'login/cadastro.html')
+    return render(request, 'login/cadastro.html')
+
 
 def loja(request):
     pedidos = Pedido.objects.all()
@@ -41,6 +43,7 @@ def loja(request):
 
     return render(request, 'loja/home.html', context)
 
+
 @csrf_exempt
 def cadastrar_usuario(request):
     if request.method == "POST":
@@ -54,20 +57,24 @@ def cadastrar_usuario(request):
             messages.error(request, "Este e-mail já está cadastrado.")
             return redirect('conta')  # Página de cadastro
 
+        # Criptografa a senha antes de salvar
+        senha_criptografada = make_password(senha)
+
         # Cria o usuário usando o manager personalizado
         novo_usuario = Create_User.objects.create_user(
             email=email,
             nome=nome,
-            senha=senha,
+            senha=senha_criptografada,
             telefone=telefone
         )
-        
 
-        #messages.success(request, f"Usuário {novo_usuario.nome} cadastrado com sucesso!")
-        return render(request, 'loja/home.html', {"usuario": novo_usuario})
-    request.session['usuario_id'] = novo_usuario.id
+        # Armazena o ID do usuário na sessão
+        request.session['usuario_id'] = novo_usuario.id
+
+        return redirect('conta')
 
     return redirect('conta')
+
 
 @csrf_exempt
 def login_usuario(request):
@@ -79,12 +86,11 @@ def login_usuario(request):
             usuario = Create_User.objects.get(email=email)
 
             if usuario.check_password(senha):
-                if usuario.mfa_enabled:#Se o usuário tem 2FA ativado (mfa_enabled = True):
-
-                    #Gera o QR code chamando a funcao e salva na variavel
+                if usuario.mfa_enabled:  # Se o usuário tem 2FA ativado (mfa_enabled = True):
+                    # Gera o QR code chamando a função e salva na variável
                     img_str = gerar_qrcode_para(usuario)
 
-                    # salva id temporário e passa img para o template
+                    # Salva ID temporário e passa img para o template
                     request.session['temp_user_id'] = usuario.id
                     context = {
                         'user_id': usuario.id,
@@ -95,7 +101,7 @@ def login_usuario(request):
 
                 # Login direto sem 2FA
                 request.session['usuario_id'] = usuario.id
-                auth_login(request, user)
+                auth_login(request, usuario)
                 messages.success(request, f"Bem-vindo, {usuario.nome}!")
                 return redirect('loja')
 
@@ -109,14 +115,15 @@ def login_usuario(request):
 
     return redirect('login')
 
+
 @csrf_exempt
 def verify_mfa(request):
     if request.method == 'POST':
-        #Pegando os dados passados por parametro
+        # Pegando os dados passados por parâmetro
         otp = request.POST.get('otp_code')
         user_id = request.POST.get('user_id')
 
-        #Busca o usuário no banco
+        # Busca o usuário no banco
         try:
             user = Create_User.objects.get(id=user_id)
         except Create_User.DoesNotExist:
@@ -125,9 +132,10 @@ def verify_mfa(request):
 
         totp = pyotp.TOTP(user.mfa_secret)
 
-        #Cria uma instância TOTP usando o segredo do usuário para verificar o código
+        # Cria uma instância TOTP usando o segredo do usuário para verificar o código
         if totp.verify(otp):
-            #Verifica se o codigo digita ta certo dentro o intervalo se der certo vai para a loja
+            # Verifica se o código digitado está certo dentro do intervalo
+            # Se der certo, vai para a loja
             request.session['usuario_id'] = user.id
             auth_login(request, user)
             messages.success(request, f"Login com 2FA bem-sucedido!")
@@ -143,25 +151,23 @@ def verify_mfa(request):
 
     return redirect('login')
 
-#Define uma função auxiliar para gerar o QR Code
-def gerar_qrcode_para(usuario):
 
-    #Cria a instância TOTP com o segredo do usuário.
+# Define uma função auxiliar para gerar o QR Code
+def gerar_qrcode_para(usuario):
+    # Cria a instância TOTP com o segredo do usuário.
     totp = pyotp.TOTP(usuario.mfa_secret)
 
-    #Gera a URI padrão
+    # Gera a URI padrão
     uri = totp.provisioning_uri(name=usuario.email, issuer_name="MadeMoments")
 
-    #Gera a imagem QR code com a URI
+    # Gera a imagem QR code com a URI
     qr = qrcode.make(uri)
     buffered = BytesIO()
     qr.save(buffered, format="PNG")
 
-    
-    #Codifica a imagem em base64 para ser embutida no HTML.
+    # Codifica a imagem em base64 para ser embutida no HTML.
     img_str = base64.b64encode(buffered.getvalue()).decode()
     return img_str
-
 
 
 def logout_view(request):
@@ -170,8 +176,9 @@ def logout_view(request):
     for _ in storage:
         pass  # isso limpa as mensagens pendentes
     return redirect('login')
-    
-#formulario para o administrator adicionar novos pedidos
+
+
+# Formulário para o administrador adicionar novos pedidos
 @csrf_exempt
 def criar_pedido(request):
     if request.method == 'POST':
@@ -179,24 +186,20 @@ def criar_pedido(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Pedido cadastrado com sucesso!')
-            #return redirect('/loja')
+            # return redirect('/loja')
     else:
         form = PedidoForm()
     return render(request, 'loja/add_pedido.html', {'form': form})
 
 
-#leva pra pagina de detalhes do produto ao clicar em comprar
+# Leva para a página de detalhes do pedido ao clicar em comprar
 @csrf_exempt
 def detalhe_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
     return render(request, 'loja/detalhe_pedido.html', {'pedido': pedido})
 
 
-
-
-
-
-#leva pra pagina de adiconar ao carrinho e escolher a quantidade que vai ser comprada
+# Leva para a página de adicionar ao carrinho e escolher a quantidade que vai ser comprada
 @csrf_exempt
 def add_carrinho(request, pedido_id):
     if request.method == 'POST':
@@ -216,10 +219,11 @@ def add_carrinho(request, pedido_id):
     # # ✅ Redireciona caso o método não seja POST
     # return redirect('home')  # ou qualquer página que faça sentido
 
+
 def ver_carrinho(request):
     carrinho = request.session.get('carrinho', {})
     itens = []
-    total = 0 
+    total = 0
 
     for pedido_id, quantidade in carrinho.items():
         pedido = get_object_or_404(Pedido, id=pedido_id)
@@ -238,6 +242,7 @@ def ver_carrinho(request):
 
     return render(request, 'loja/itens_carrinho.html', context)
 
+
 @csrf_exempt
 def remover_carrinho(request, pedido_id):
     carrinho = request.session.get('carrinho', {})
@@ -245,31 +250,87 @@ def remover_carrinho(request, pedido_id):
     if str(pedido_id) in carrinho:
         del carrinho[str(pedido_id)]
         request.session['carrinho'] = carrinho
-        
 
     return redirect('ver_carrinho')
 
+
 def pagamento_certo(request):
-    return render(request,'loja/mercado_pagoCerta.html')
+    return render(request, 'loja/mercado_pagoCerta.html')
+
 
 def pagamento_errado(request):
-    return render(request,'loja/mercado_pagoErrada.html')
+    return render(request, 'loja/mercado_pagoErrada.html')
 
 
 
-# def carrinho_context(request):
-#     if request.user.is_authenticated:
-#         carrinho = Carrinho.objects.filter(usuario=request.user)
-#     else:
-#         carrinho = []
-#         return {'itens_carrinho': carrinho}
+###LUIS HENRIQUE ZAZAZAZZZZZZ E ZAZZ O CODIGO FIUNCIONAR - LOKO SONHADOR E ZAZZZZ
+###### ARRUMAR OS MEUS IMPORTS QUEM MEXER NISSO AQUI POR FAVOR JOGAR TODOS FROM PARA O TOPO DO ARQUVIO
+
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Pedido
+from .forms import PedidoForm  
 
 
+def is_admin(user):
+    return getattr(user, 'is_staff', False)
 
-# def listar_pedidos(request):
-#     pedidos = Pedido.objects.all()
-#     return render(request, 'loja/listar_pedido.html', {'pedidos': pedidos})
+@csrf_exempt
+@login_required
+@user_passes_test(is_admin, login_url='loja')
+def painel_admin(request):
+    pedidos = Pedido.objects.all()
+    return render(request, 'admin/painel_admin.html', {'pedidos': pedidos})
+
+# ADD PRODUTOZZZZZZZZZZ
+@csrf_exempt
+@login_required
+@user_passes_test(is_admin, login_url='loja')
+def adicionar_pedido(request):
+    if request.method == 'POST':
+        form = PedidoForm(request.POST, request.FILES) 
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Pedido adicionado com sucesso!")
+            return redirect('painel_admin')
+        else:
+            messages.error(request, "Erro ao adicionar o pedido. Verifique os dados.")
+    else:
+        form = PedidoForm()
     
-# def home(request):
-#     pedidos = Pedido.objects.all()
-#     return render(request, 'loja/home.html', {'pedidos': pedidos})
+    return render(request, 'admin/adicionar_pedido.html', {'form': form, 'titulo': 'Adicionar Pedido'})
+
+# EDITAR PRODUTOZZZZZZZZZ
+@csrf_exempt
+@login_required
+@user_passes_test(is_admin, login_url='loja')
+def editar_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    
+    if request.method == 'POST':
+        form = PedidoForm(request.POST, request.FILES, instance=pedido)  
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Pedido atualizado com sucesso!")
+            return redirect('painel_admin')
+        else:
+            messages.error(request, "Erro ao atualizar o pedido. Verifique os dados.")
+    else:
+        form = PedidoForm(instance=pedido)  
+
+    return render(request, 'admin/editar_pedido.html', {'form': form, 'pedido': pedido, 'titulo': 'Editar Pedido'})
+
+# EXCLUIR PRODUTOZZZZZZZZ
+@csrf_exempt
+@login_required
+@user_passes_test(is_admin, login_url='loja')
+def excluir_pedido(request, pedido_id):
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+    
+    if request.method == 'POST':
+        pedido.delete()
+        messages.success(request, "Pedido excluído com sucesso!")
+        return redirect('painel_admin')
+    
+    return render(request, 'admin/excluir_pedido.html', {'pedido': pedido, 'titulo': 'Excluir Pedido'})

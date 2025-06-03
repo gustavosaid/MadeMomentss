@@ -146,3 +146,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'login.Create_User'
+
+LOGIN_URL = '/login/'  # URL de login
+LOGIN_REDIRECT_URL = '/painel/'  # Para redirecionar administradores para o painel após o login

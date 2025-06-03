@@ -1,0 +1,27 @@
+{% extends 'navbar/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="text-center">Painel de Administração</h1>
+    
+    <div class="text-center mb-4">
+      <a href="{% url 'adicionar_pedido' %}" class="btn btn-primary">Adicionar produto</a>
+    </div>
+    
+    <div class="row">
+      {% for pedido in pedidos %}
+        <div class="col-md-3 mb-4">
+          <div class="card">
+            <img src="{{ pedido.foto.url }}" class="card-img-top" alt="Imagem do pedido">
+            <div class="card-body">
+              <h5 class="card-title">{{ pedido.nome }}</h5>
+              <p class="card-text">{{ pedido.descricao }}</p>
+              <a href="{% url 'editar_pedido' pedido.id %}" class="btn btn-warning">Editar</a>
+              <a href="{% url 'excluir_pedido' pedido.id %}" class="btn btn-danger">Excluir</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
