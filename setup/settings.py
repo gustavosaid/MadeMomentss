@@ -27,7 +27,8 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000',  # ou http:// se não estiver usando HTTPS
+    'http://localhost:8000',
+    'https://localhost:8000',  # ou http:// se não estiver usando HTTPS
 ]
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -58,7 +59,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
 ]
 
 ROOT_URLCONF = 'setup.urls'

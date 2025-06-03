@@ -7,7 +7,8 @@ from login.api_mercadoPago import gerar_link_pagamento
 urlpatterns = [
     # Página inicial de login
     path('', views.login_view, name='login'),   # Página inicial: login
-    path('cadastro/', conta, name='conta'),  # Formulário de cadastro
+    path('cadastro/', conta, name='conta'),  # Mostra o formulário
+    path('cadastro/salvar/', cadastrar_usuario, name='cadastrar_usuario'),  # Processa o POST  # Formulário de cadastro
     path('usuarios/', cadastrar_usuario, name='cadastrar_usuario'),  # POST de cadastro
     path('login/', login_usuario, name='login_usuario'),  # POST de login
     path('loja/', loja, name='loja'),  # Página da loja após login
@@ -22,7 +23,7 @@ urlpatterns = [
     path('compracerta/', pagamento_certo, name='pagamento_certo'),
     path('compraerrada/', pagamento_errado, name='pagamento_errado'),
     path('pagar/', gerar_link_pagamento, name='pagar'),
-    path('verify-2fa/', views.verify_mfa, name='verify_mfa'), # Verificar código 2FA
+    path('verify-2fa/', views.verify_mfa, name='verify_mfa'), 
 
     # URLs do painel de administração
     path('painel/', views.painel_admin, name='painel_admin'),

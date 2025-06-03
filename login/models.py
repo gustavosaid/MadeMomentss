@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
-import pyotp
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, email, nome, senha=None, **extra_fields):
@@ -24,6 +23,7 @@ class UsuarioManager(BaseUserManager):
 
 class Create_User(AbstractBaseUser, PermissionsMixin):
     nome = models.CharField(max_length=100)
+    cpf = models.CharField(max_length=14, unique=True, null=True, blank=True)
     email = models.EmailField(unique=True)
     telefone = models.CharField(max_length=20, null=True, blank=True)
     role = models.CharField(
@@ -38,7 +38,7 @@ class Create_User(AbstractBaseUser, PermissionsMixin):
     mfa_secret = models.CharField(max_length=16, blank=True, null=True)
     mfa_enabled = models.BooleanField(default=False)
 
-    # Campos exigidos para funcionamento correto do Django admin e autenticação
+    # Campos exigidos pelo Django
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 

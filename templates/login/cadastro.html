@@ -1,63 +1,137 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="pt-br">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Cadastro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilo básico do toast */
+        .toast {
+            width: 300px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 0.25rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
+            padding: 10px;
+            font-size: 14px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1050;
+            display: none;
+            text-align: center;
+        }
+        .toast-body {
+            font-weight: normal;
+        }
+    </style>
 </head>
-
 <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
 
-    <div class="card p-4 shadow-lg " style="width: 400px; border-radius: 10px;">
+    <div class="card p-4 shadow-lg" style="width: 400px; border-radius: 10px;">
         <nav class="navbar bg-body">
             <div class="container-fluid justify-content-center">
-                <img src="/static/logo-MadeMoments.png" alt="Logo" width="130" height="130"
-                    class="d-inline-block align-text-top">
+                <img src="/static/logo-MadeMoments.png" alt="Logo" width="130" height="130">
             </div>
         </nav>
 
-
         <h2 class="text-center mb-2">Cadastro</h2>
-        <form action="{% url 'cadastrar_usuario'%}" method="post">
-            {%csrf_token%}
-            <div class="mb-3">
+        
+        <form action="{% url 'cadastrar_usuario' %}" method="post" onsubmit="return validarFormulario()">
+            {% csrf_token %}
 
-                <input name="nome" type="text" class="form-control" placeholder="Nome Completo" required>
-            </div>
-            <div class="mb-3">
-                <input name="cpf" type="text" class="form-control" placeholder="CPF" required>
-            </div>
-            <div class="mb-3">
-                {% if messages %}
-                <ul>
+            {% if messages %}
+                <ul class="text-danger">
                     {% for message in messages %}
-                    <li>{{ message }}</li>
+                        <li>{{ message }}</li>
                     {% endfor %}
                 </ul>
-                {% endif %}
-                <input name="email" type="email" class="form-control" placeholder="E-mail" required>
+            {% endif %}
+
+            <div class="mb-3">
+                <input id="nome" name="nome" type="text" class="form-control" placeholder="Nome Completo" required>
             </div>
             <div class="mb-3">
-                <input name="telefone" type="text" class="form-control" placeholder="Telefone" required>
+                <input id="cpf" name="cpf" type="text" class="form-control" placeholder="CPF" required maxlength="11">
             </div>
             <div class="mb-3">
-                <input name="senha" type="password" class="form-control" placeholder="Senha" required>
+                <input id="email" name="email" type="email" class="form-control" placeholder="E-mail" required>
             </div>
+            <div class="mb-3">
+                <input id="telefone" name="telefone" type="text" class="form-control" placeholder="Telefone" required maxlength="11">
+            </div>
+            <div class="mb-3">
+                <input id="senha" name="senha" type="password" class="form-control" placeholder="Senha" required>
+            </div>
+
             <button type="submit" class="btn btn-outline-success w-100">Cadastrar</button>
         </form>
+
         <div class="d-grid gap-4 mt-3">
-            <a href="{% url 'login'%}" class="btn btn-outline-secondary w-100">Voltar </a>
+            <a href="{% url 'login' %}" class="btn btn-outline-secondary w-100">Voltar</a>
         </div>
     </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div class="toast-body">
+            <strong>Erro:</strong> CPF deve conter exatamente 11 dígitos numéricos.
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Função para mostrar a Toast Notification
+        function mostrarToast(mensagem) {
+            const toast = document.getElementById('toast');
+            toast.querySelector('.toast-body').innerHTML = mensagem;
+            toast.style.display = 'block';
+
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000); // Esconde após 3 segundos
+        }
+
+        // Função de validação do formulário
+        function validarFormulario() {
+            const cpf = document.getElementById('cpf').value;
+            const telefone = document.getElementById('telefone').value;
+            const email = document.getElementById('email').value;
+            const senha = document.getElementById('senha').value;
+
+            // CPF: 11 dígitos numéricos
+            if (!/^\d{11}$/.test(cpf)) {
+                mostrarToast('CPF deve conter exatamente 11 dígitos numéricos.');
+                return false;
+            }
+
+            // Telefone: 11 dígitos numéricos (com DDD)
+            if (!/^\d{11}$/.test(telefone)) {
+                mostrarToast('Telefone deve conter exatamente 11 dígitos com DDD.');
+                return false;
+            }
+
+            // Email: deve conter "@" (o type="email" já faz isso, mas por segurança...)
+            if (!email.includes('@')) {
+                mostrarToast('E-mail inválido. Deve conter "@"');
+                return false;
+            }
+
+            // Senha: mínimo 8, 1 maiúscula, 1 caractere especial
+            if (senha.length < 8 ||
+                !/[A-Z]/.test(senha) ||
+                !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(senha)) {
+                mostrarToast('A senha deve conter pelo menos 8 caracteres, 1 letra maiúscula e 1 caractere especial.');
+                return false;
+            }
+
+            return true; // se tudo estiver ok
+        }
+    </script>
+
 </body>
-
-</html>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-
 </html>

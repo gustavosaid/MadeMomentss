@@ -44,37 +44,55 @@ def loja(request):
     return render(request, 'loja/home.html', context)
 
 
-@csrf_exempt
+from django.contrib.auth import login
+from django.shortcuts import redirect
+from django.contrib import messages
+from .models import Create_User
+
 def cadastrar_usuario(request):
     if request.method == "POST":
         nome = request.POST.get("nome")
         email = request.POST.get("email")
         senha = request.POST.get("senha")
         telefone = request.POST.get("telefone")
+        cpf = request.POST.get("cpf")
 
-        # Verifica se o e-mail já está cadastrado
         if Create_User.objects.filter(email=email).exists():
             messages.error(request, "Este e-mail já está cadastrado.")
-            return redirect('conta')  # Página de cadastro
+            return redirect('conta')
 
-        # Criptografa a senha antes de salvar
-        senha_criptografada = make_password(senha)
+        if Create_User.objects.filter(cpf=cpf).exists():
+            messages.error(request, "Este CPF já está cadastrado.")
+            return redirect('conta')
 
-        # Cria o usuário usando o manager personalizado
-        novo_usuario = Create_User.objects.create_user(
-            email=email,
-            nome=nome,
-            senha=senha_criptografada,
-            telefone=telefone
-        )
+        try:
+            novo_usuario = Create_User.objects.create_user(
+                email=email,
+                nome=nome,
+                senha=senha,
+                telefone=telefone,
+                cpf=cpf,
+                mfa_secret=pyotp.random_base32(),
+                mfa_enabled=True
+            )
+            if novo_usuario.mfa_enabled:
+                img_str = gerar_qrcode_para(novo_usuario)
+                request.session['temp_user_id'] = novo_usuario.id
+                context = {
+                    'user_id': novo_usuario.id,
+                    'qr_code': img_str,
+                    'usuario': novo_usuario,
+                }
+                return render(request, 'login/otp_verify.html', context)
 
-        # Armazena o ID do usuário na sessão
-        request.session['usuario_id'] = novo_usuario.id
-
-        return redirect('conta')
+            auth_login(request, novo_usuario)
+            messages.success(request, "Cadastro realizado com sucesso!")
+            return redirect('loja')
+        except Exception as e:
+            messages.error(request, f"Erro ao cadastrar: {e}")
+            return redirect('conta')
 
     return redirect('conta')
-
 
 @csrf_exempt
 def login_usuario(request):
@@ -86,22 +104,9 @@ def login_usuario(request):
             usuario = Create_User.objects.get(email=email)
 
             if usuario.check_password(senha):
-                if usuario.mfa_enabled:  # Se o usuário tem 2FA ativado (mfa_enabled = True):
-                    # Gera o QR code chamando a função e salva na variável
-                    img_str = gerar_qrcode_para(usuario)
-
-                    # Salva ID temporário e passa img para o template
-                    request.session['temp_user_id'] = usuario.id
-                    context = {
-                        'user_id': usuario.id,
-                        'qr_code': img_str,
-                        'usuario': usuario,
-                    }
-                    return render(request, 'login/otp_verify.html', context)
-
                 # Login direto sem 2FA
                 request.session['usuario_id'] = usuario.id
-                auth_login(request, usuario)
+                auth_login(request,usuario)
                 messages.success(request, f"Bem-vindo, {usuario.nome}!")
                 return redirect('loja')
 
