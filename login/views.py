@@ -1,7 +1,7 @@
 from hashlib import scrypt
 from pyexpat.errors import messages
 from django.shortcuts import redirect, render
-from .models import Create_User, Pedido
+from .models import Create_User, Pedido, Endereco
 from django.contrib.auth.hashers import make_password #criptografar senha
 from django.contrib import messages 
 from django.contrib.auth.hashers import check_password
@@ -15,6 +15,7 @@ import pyotp
 import qrcode
 from io import BytesIO
 import base64
+from django.contrib.auth.decorators import login_required
 
 
 def login_view(request):
@@ -23,6 +24,49 @@ def login_view(request):
 
 def conta(request):
     return render(request, 'login/cadastro.html')
+
+
+
+@csrf_exempt
+@login_required
+def cadastrar_endereco(request):
+    
+    if request.method == 'POST':
+        cep = request.POST.get("cep")
+        endereco = request.POST.get("endereco")
+        bairro = request.POST.get("bairro")
+        numero = request.POST.get("numero")
+        complemento = request.POST.get("complemento")
+
+        # Pega o usuário logado
+        usuario = request.user
+       
+
+        #salvar endereco
+        Endereco.objects.create(
+            userEndereco=usuario,
+            cep=cep,
+            endereco=endereco,
+            bairro=bairro,
+            numero=numero,
+            complemento=complemento
+        )
+        #novo_endereco.save()
+
+        # Mensagem de sucesso (opcional)
+        messages.success(request, "Endereço cadastrado com sucesso!")
+        return redirect('pagar')
+
+    return render(request,'login/endereco.html')
+
+def visualizar_perfil(request):
+    usuario = request.user  # pega o usuário autenticado
+
+    enderecos = Endereco.objects.filter(userEndereco=usuario)
+
+    return render(request, 'login/perfil.html', {'usuario':usuario, 'enderecos':enderecos
+
+    })
 
 
 def loja(request):

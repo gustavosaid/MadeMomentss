@@ -1,7 +1,8 @@
 from django.urls import path
 from login import views
 from login.views import (login_view, conta, cadastrar_usuario, loja, login_usuario, logout_view, criar_pedido,
-                         add_carrinho, ver_carrinho, remover_carrinho, pagamento_certo, pagamento_errado)
+                        add_carrinho, ver_carrinho, remover_carrinho, pagamento_certo, pagamento_errado,
+                        visualizar_perfil, cadastrar_endereco)
 from login.api_mercadoPago import gerar_link_pagamento
 
 urlpatterns = [
@@ -14,6 +15,8 @@ urlpatterns = [
     path('loja/', loja, name='loja'),  # Página da loja após login
     path('logout/', logout_view, name='logout'), # View de logout
     path('pedido/novo/', criar_pedido, name='criar_pedido'), # Criar novo pedido
+    path('perfil/', visualizar_perfil, name='visualizar_perfil'), # Criar novo pedido
+    path('endereco/', cadastrar_endereco, name='cadastrar_endereco'), # Criar novo pedido
 
     # Parte do carrinho
     path('pedido/<int:pedido_id>/', views.detalhe_pedido, name='detalhe_pedido'), # Detalhes ao clicar em comprar

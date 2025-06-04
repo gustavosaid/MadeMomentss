@@ -65,3 +65,15 @@ class Carrinho(models.Model):
     usuario = models.ForeignKey(Create_User, on_delete=models.CASCADE)
     produto = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     quantidade = models.IntegerField(default=1)
+
+
+class Endereco(models.Model):
+    userEndereco = models.ForeignKey(Create_User, on_delete=models.CASCADE)
+    endereco = models.CharField(max_length=50, blank=False)
+    bairro = models.CharField(max_length=50, blank=False)
+    numero = models.CharField(max_length=5, blank=False)
+    complemento = models.CharField(max_length=25)
+    cep = models.CharField(max_length=9)
+
+    def __str__(self):
+        return f'{self.endereco}, {self.numero} - {self.bairro}'
