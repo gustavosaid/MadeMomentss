@@ -1,75 +1,9 @@
 {% extends "navbar/base.html" %}
+{% load static %}
 {% block content %}
 
-<style>
-    body {
-        background-color: #fff0f5; /* rosa claro no fundo */
-    }
-
-    .cart-card {
-        background-color: #ffffff;
-        border: 1px solid #f8d7da;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    }
-
-    .cart-header {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #d63384; /* rosa escuro */
-        margin-bottom: 1rem;
-    }
-
-    .product-img {
-        height: 100px;
-        width: auto;
-        border-radius: 10px;
-        object-fit: cover;
-    }
-
-    .badge-subtotal {
-        background-color: #f8bbd0;
-        color: #6f042e;
-    }
-
-    .badge-total {
-        background-color: #f06292;
-        color: white;
-    }
-
-    .btn-outline-danger {
-        border-color: #e83e8c;
-        color: #e83e8c;
-    }
-
-    .btn-outline-danger:hover {
-        background-color: #e83e8c;
-        color: white;
-    }
-
-    .btn-primary {
-        background-color: #d63384;
-        border-color: #d63384;
-    }
-
-    .btn-primary:hover {
-        background-color: #c2185b;
-        border-color: #c2185b;
-    }
-
-    .btn-success {
-        background-color: #f06292;
-        border-color: #f06292;
-    }
-
-    .btn-success:hover {
-        background-color: #ec407a;
-        border-color: #ec407a;
-    }
-
-</style>
+<!-- Link para o CSS externo -->
+<link rel="stylesheet" href="{% static 'css/carrinho.css' %}">
 
 <div class="container mt-5">
     <div class="cart-header">🛍️ Meu Carrinho</div>
@@ -82,7 +16,7 @@
                 <img src="{{ item.pedido.foto.url }}" alt="Foto do item" class="product-img">
             </div>
             <div class="col-md-6">
-                <h5 class="mb-1">{{ item.pedido.descricao }}</h5>
+                <h5 class="mb-1">{{ item.pedido.categoria }}</h5>
                 <p class="mb-0">Quantidade: <strong>{{ item.quantidade }}</strong></p>
                 <p class="mb-0">Valor unitário: <strong>R$ {{ item.pedido.valor|floatformat:2 }}</strong></p>
             </div>
@@ -92,7 +26,7 @@
             <div class="col-md-2 text-end">
                 <form method="POST" action="{% url 'remover_carrinho' item.pedido.id %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                    <button type="submit" class="btn btn-primary">
                         <i class="bi bi-trash"></i> Remover
                     </button>
                 </form>
@@ -100,17 +34,18 @@
         </div>
         {% endfor %}
 
-        <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded shadow-sm mt-4 border border-pink">
-            <h4 class="mb-0 text-dark">💰 Total geral:</h4>
+        <div class="cart-card d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-dark">Total geral:</h4>
             <span class="badge badge-total fs-5 p-2">R$ {{ total_geral|floatformat:2 }}</span>
         </div>
+
 
         <div class="d-flex justify-content-between mt-4">
             <a href="{% url 'loja' %}" class="btn btn-primary">
                 <i class="bi bi-arrow-left"></i> Continuar comprando
             </a>
-            <a href="{% url 'cadastrar_endereco' %}" class="btn btn-success">
-                Cadastar Endereço<i class="bi bi-arrow-right-circle ms-1"></i>
+            <a href="{% url 'cadastrar_endereco' %}" class="btn btn-primary">
+                Cadastrar Endereço<i class="bi bi-arrow-right-circle ms-1"></i>
             </a>
         </div>
 

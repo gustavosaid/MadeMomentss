@@ -80,3 +80,8 @@ senha teste : K7UgbKFDdU
 
 
 abrir painel de vendas: https://www.mercadopago.com.br/home
+
+SUPER  USER
+Email: admin@gmail.com
+Nome: admin
+SENHA: admin

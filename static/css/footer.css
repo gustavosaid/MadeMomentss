@@ -1,0 +1,80 @@
+/* Responsividade */
+@media (max-width: 768px) {
+  footer {
+    text-align: center;
+  }
+}
+:root {
+    --bg-color: #eeeee6;
+    --primary-color: #693d14;
+    --secondary-color: #a05f26;
+    --hover-color: #d4b499;
+    --text-color: #554037;
+    --border-color: #d9d0c1;
+}
+footer {
+  margin-top: 60px;
+  background-color: var(--border-color);
+  color: var(--primary-color);
+  padding: 60px 0 40px 0; /* Topo, direita, baixo, esquerda */
+}
+
+footer h5 {
+  color: var(--primary-color);
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+footer p {
+  margin-bottom: 8px;
+  font-weight: 400;
+  transition: transform 0.3s ease;
+}
+
+footer p:hover{
+  color: #4b2c0f;
+  font-weight: 500;
+  cursor: default;
+  transform: scale(1.1);
+}
+
+footer ul {
+  padding: 0;
+  list-style: none;
+}
+
+footer ul li {
+  margin-bottom: 10px;
+}
+
+footer hr {
+  border-color: var(--primary-color);
+}
+
+footer .text-center {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+/* Ícones sociais */
+.social-icons a {
+  display: inline-block;
+  margin-right: 10px;
+  transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+  transform: scale(1.1);
+}
+
+.social-icons .icon {
+  width: 28px;
+  height: 28px;
+  color:var(--primary-color);
+}
+
+.social-icons .selo {
+  width: 100px;
+  height: auto;
+  margin-left: 10px;
+}

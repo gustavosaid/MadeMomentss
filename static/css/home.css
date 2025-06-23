@@ -1,0 +1,16 @@
+/* Remove overflow da página inteira */
+html, body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+.conteudo_principal{
+    margin-bottom: 300px;
+    margin-top: -24px;    
+}
+.text-center{
+    margin-top: 100px;
+}
+.text-center h3{
+    font-size: 30px;
+}

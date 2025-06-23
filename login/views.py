@@ -16,6 +16,7 @@ import qrcode
 from io import BytesIO
 import base64
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 
 
 def login_view(request):
@@ -30,44 +31,94 @@ def conta(request):
 @csrf_exempt
 @login_required
 def cadastrar_endereco(request):
-    
+    usuario = request.user
+
+    # Verifica se o usuário já tem endereço cadastrado
+    endereco = Endereco.objects.filter(userEndereco=usuario).first()
+
     if request.method == 'POST':
         cep = request.POST.get("cep")
-        endereco = request.POST.get("endereco")
+        endereco_txt = request.POST.get("endereco")
         bairro = request.POST.get("bairro")
         numero = request.POST.get("numero")
         complemento = request.POST.get("complemento")
 
-        # Pega o usuário logado
-        usuario = request.user
-       
+        if endereco:
+            # Atualiza o endereço existente
+            endereco.cep = cep
+            endereco.endereco = endereco_txt
+            endereco.bairro = bairro
+            endereco.numero = numero
+            endereco.complemento = complemento
+            endereco.save()
+            messages.success(request, "Endereço atualizado com sucesso!")
+        else:
+            # Cria um novo endereço se não existir
+            Endereco.objects.create(
+                userEndereco=usuario,
+                cep=cep,
+                endereco=endereco_txt,
+                bairro=bairro,
+                numero=numero,
+                complemento=complemento
+            )
+            messages.success(request, "Endereço cadastrado com sucesso!")
 
-        #salvar endereco
-        Endereco.objects.create(
-            userEndereco=usuario,
-            cep=cep,
-            endereco=endereco,
-            bairro=bairro,
-            numero=numero,
-            complemento=complemento
-        )
-        #novo_endereco.save()
-
-        # Mensagem de sucesso (opcional)
-        messages.success(request, "Endereço cadastrado com sucesso!")
         return redirect('pagar')
 
-    return render(request,'login/endereco.html')
+    # Envia os dados existentes (se houver) para o template
+    context = {'endereco': endereco}
+    return render(request, 'login/endereco.html', context)
 
+
+@login_required
 def visualizar_perfil(request):
-    usuario = request.user  # pega o usuário autenticado
+    usuario = request.user
+    endereco = Endereco.objects.filter(userEndereco=usuario).first()
 
-    enderecos = Endereco.objects.filter(userEndereco=usuario)
+    if request.method == 'POST':
+        # Dados do usuário
+        nome = request.POST.get('nome')
+        telefone = request.POST.get('telefone')
 
-    return render(request, 'login/perfil.html', {'usuario':usuario, 'enderecos':enderecos
+        # Dados do endereço
+        cep = request.POST.get('cep')
+        endereco_txt = request.POST.get('endereco')
+        bairro = request.POST.get('bairro')
+        numero = request.POST.get('numero')
+        complemento = request.POST.get('complemento')
 
-    })
+        # Atualiza dados do usuário
+        usuario.nome = nome
+        usuario.telefone = telefone
+        usuario.save()
 
+        # Atualiza ou cria endereço
+        if endereco:
+            endereco.cep = cep
+            endereco.endereco = endereco_txt
+            endereco.bairro = bairro
+            endereco.numero = numero
+            endereco.complemento = complemento
+            endereco.save()
+        else:
+            Endereco.objects.create(
+                userEndereco=usuario,
+                cep=cep,
+                endereco=endereco_txt,
+                bairro=bairro,
+                numero=numero,
+                complemento=complemento
+            )
+
+        messages.success(request, 'Dados atualizados com sucesso!')
+        return redirect('visualizar_perfil')
+
+    context = {
+        'usuario': usuario,
+        'endereco': endereco
+    }
+    return render(request, 'login/perfil.html', context)
 
 def loja(request):
     pedidos = Pedido.objects.all()

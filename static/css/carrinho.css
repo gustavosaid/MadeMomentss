@@ -1,0 +1,60 @@
+ :root {
+    --bg-color: #eeeee6;
+    --primary-color: #693d14;
+    --bg-card: #f0ebe7;
+}
+ body {
+        background-color: #fff0f5; /* rosa claro no fundo */
+    }
+
+    .cart-card {
+        background-color: var(--bg-color);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .cart-header {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .product-img {
+        height: 100px;
+        width: auto;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+
+    .badge-subtotal {
+        background-color: var(--bg-card);
+        color: var(--primary-color);
+    }
+
+    .badge-total {
+        background-color: var(--bg-card);
+        color: var(--primary-color);
+    }
+
+    .btn-primary {
+        background-color: var(--bg-color);
+        display: inline-block;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        padding: 8px 24px;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        margin-top: 16px;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--hover-color);
+        color: var(--text-color);
+        border-color: var(--hover-color);
+    }
+

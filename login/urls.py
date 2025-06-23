@@ -7,12 +7,12 @@ from login.api_mercadoPago import gerar_link_pagamento
 
 urlpatterns = [
     # Página inicial de login
-    path('', views.login_view, name='login'),   # Página inicial: login
+    path('', loja, name='loja'),  # Página inicial
+    path('login/', views.login_view, name='login'), 
     path('cadastro/', conta, name='conta'),  # Mostra o formulário
     path('cadastro/salvar/', cadastrar_usuario, name='cadastrar_usuario'),  # Processa o POST  # Formulário de cadastro
     path('usuarios/', cadastrar_usuario, name='cadastrar_usuario'),  # POST de cadastro
     path('login/', login_usuario, name='login_usuario'),  # POST de login
-    path('loja/', loja, name='loja'),  # Página da loja após login
     path('logout/', logout_view, name='logout'), # View de logout
     path('pedido/novo/', criar_pedido, name='criar_pedido'), # Criar novo pedido
     path('perfil/', visualizar_perfil, name='visualizar_perfil'), # Criar novo pedido

@@ -1,40 +1,19 @@
-{% include "navbar/base.html" %}
+{% extends "navbar/base.html" %}
+{% load static %}
+
+{% block title %}Início - MadeMoments{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}?v=5">
+<link rel="stylesheet" href="{% static 'css/produtos.css' %}?v=5">
+<link rel="stylesheet" href="{% static 'css/carousel.css' %}?v=5">
+
+{% endblock %}
+
 {% block content %}
+<main class="conteudo_principal">
 
-<style>
-  .carousel-control-prev-icon,
-  .carousel-control-next-icon {
-    background-image: none;
-    /* Remove o ícone padrão */
-    width: 2rem;
-    height: 2rem;
-    background-color: transparent;
-    border: 2px solid black;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .carousel-control-prev-icon::after,
-  .carousel-control-next-icon::after {
-    content: '';
-    border: solid black;
-    border-width: 0 4px 4px 0;
-    display: inline-block;
-    padding: 6px;
-  }
-
-  .carousel-control-prev-icon::after {
-    transform: rotate(135deg);
-  }
-
-  .carousel-control-next-icon::after {
-    transform: rotate(-45deg);
-  }
-</style>
-
-<body style="background-color: #FFE4E1;">
+  <!-- Carrossel -->
   <div id="carouselExampleIndicators" class="carousel slide mt-3" data-bs-ride="carousel">
     <div class="carousel-indicators">
       <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
@@ -44,65 +23,49 @@
       <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
         aria-label="Slide 3"></button>
     </div>
-    
-    <div class="carousel-inner mt-4" style="background-color: #FFE4E1; height: 500px;">
+
+    <div class="carousel-inner mt-4" style="background-color: #ffe4e100; height: 500px;">
       <div class="carousel-item active">
-        <img src="/media/static/pedidos_fotos/foto1.png" class="d-block mx-auto img-fluid" style="max-width: 350px;"
-          alt="...">
+        <img src="{% static 'img/carousel/1.jpg' %}" class="d-block mx-auto img-fluid">
       </div>
-
       <div class="carousel-item">
-        <img src="/media/static/pedidos_fotos/foto4.png" class="d-block mx-auto img-fluid" style="max-width: 350px;"
-          alt="...">
+        <img src="{% static 'img/carousel/1.jpg' %}" class="d-block mx-auto img-fluid">
       </div>
-
       <div class="carousel-item">
-        <img src="/media/static/pedidos_fotos/foto5.jpg" class="d-block mx-auto img-fluid" style="max-width: 350px;"
-          alt="...">
+        <img src="{% static 'img/carousel/1.jpg' %}" class="d-block mx-auto img-fluid">
       </div>
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
-      data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
-
     </button>
-
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
-      data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
   </div>
 
-  <div class="d-flex justify-content-center mt-5">
-    <form class="d-flex " style="width: 500px;">
-      <input class="form-control  form-control-sm fw-normal" type="search" placeholder="Procurar" aria-label="Search">
-      <button class="btn btn-outline-secondary fw-bolder" type="submit" style="color: black;">Pesquisar</button>
-    </form>
-  </div>
-
+  <!-- Título -->
   <div class="container mt-5">
     <div class="text-center">
-      <h3 class="fw-bold mb-3" style="color: #6f42c1;">Nossos Produtos</h3>
-      <p class="fw-lighter mb-4">Conheça as opções personalizadas que preparamos com carinho para cada ocasião especial.
-      </p>
-      <hr class="w-25 mx-auto" style="border-top: 2px solid #6f42c1;">
+      <h3 class="fw-bold mb-3" style="color: #693d14;">Nossos Produtos</h3>
+      <p class="fw-lighter mb-4">Conheça as opções personalizadas que preparamos com carinho para cada ocasião especial.</p>
+      <hr class="w-25 mx-auto" style="border-top: 2px solid #693d14;">
     </div>
   </div>
 
-
+  <!-- Cards -->
   {% for pedido in pedidos %}
-  {% if forloop.first or forloop.counter0|divisibleby:4 %}
-    <div class="row justify-content-center mb-2">
-  {% endif %}
-  
+    {% if forloop.first or forloop.counter0|divisibleby:4 %}
+      <div class="row justify-content-center mb-2">
+    {% endif %}
+
     <div class="col-md-2 d-flex justify-content-center">
-      <div class="card" style="width: 18rem;">
+      <div class="card">
         <img src="{{ pedido.foto.url }}" class="card-img-top" alt="Imagem do pedido">
         <div class="card-body">
-          <h5 class="card-title">{{pedido.categoria}}</h5>
+          <h5 class="card-title">{{ pedido.categoria }}</h5>
           <p class="card-text">{{ pedido.descricao }}</p>
           <p class="card-text fw-bold">R$ {{ pedido.valor }}</p>
           <a href="{% url 'detalhe_pedido' pedido.id %}" class="btn btn-outline-info">Comprar</a>
@@ -110,14 +73,10 @@
       </div>
     </div>
 
-  {% if forloop.counter|divisibleby:4 or forloop.last %}
-    </div>
-  {% endif %}
-{% endfor %}
+    {% if forloop.counter|divisibleby:4 or forloop.last %}
+      </div>
+    {% endif %}
+  {% endfor %}
 
-
-  </div>
-
-
-  {% endblock %}
-</body>
+</main>
+{% endblock %}

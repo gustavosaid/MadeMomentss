@@ -1,0 +1,103 @@
+/* Paleta de Cores */
+:root {
+    --bg-color: #eeeee6;
+    --primary-color: #693d14;
+    --secondary-color: #a05f26;
+    --hover-color: #d4b499;
+    --text-color: #554037;
+    --border-color: #d9d0c1;
+}
+body {
+    background-color: #eeeee6;
+}
+
+/* Navbar Principal */
+.custom-navbar {
+    background-color: var(--bg-color);
+    padding: 8px 40px;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.img-logo {
+    max-height: 80px;   
+    width: auto;
+    object-fit: contain;
+}
+
+/* Botão Hamburguer */
+.navbar-toggler {
+    border-color: var(--primary-color);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23693d14' viewBox='0 0 30 30'%3E%3Cpath stroke='%23693d14' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+
+/* Ícones */
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-link {
+    color: var(--primary-color);
+    font-size: 1.6rem;
+    text-decoration: none;
+    position: relative;
+    padding: 10px;
+}
+
+.icon-link:hover {
+    color: var(--secondary-color);
+}
+
+/*sobre nos*/
+.sobre_nos{
+    padding-top: 16px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Numero do carrinho */
+.icon-link  .num_carrinho{
+    position: absolute;
+    top: 0px;
+    right: -6px;
+    color: var(--primary-color);
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+}
+
+
+/* Animação Dropdown */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .search-container {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .icons {
+        justify-content: flex-end;
+        width: 100%;
+    }
+
+    .custom-navbar-sub {
+        padding: 0 16px;
+    }
+}

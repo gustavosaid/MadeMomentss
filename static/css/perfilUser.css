@@ -1,0 +1,169 @@
+:root {
+    --bg-color: #eeeee6;
+    --primary-color: #693d14;
+    --secondary-color: #a05f26;
+    --hover-color: #d4b499;
+    --text-color: #554037;
+    --border-color: #d9d0c1;
+    --bg-card:#f0ebe7;
+}
+
+/* ====== Global ====== */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+}
+
+/* ====== Container geral ====== */
+.full-container {
+    background-color: var(--bg-color);
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.container-content {
+    width: 100%;
+    max-width: 600px;
+}
+
+.custom-header {
+    background-color: var(--bg-color);
+    color: var(--bg-color);
+    padding: 20px;
+    text-align: center;
+}
+
+/* ====== Card do perfil ====== */
+.card {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* ====== Cabeçalho ====== */
+.card-header {
+    background-color: var(--bg-color);
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+.card-header h4 {
+    margin: 0;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 1.4rem;
+}
+
+/* ====== Corpo do card ====== */
+.card-body {
+    padding: 24px;
+    background-color: var(--bg-color);
+}
+
+/* Blocos de informações */
+.row.mb-3 {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.row.mb-3:last-child {
+    border-bottom: none;
+}
+
+/* Labels */
+label {
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+/*INPUT*/
+input.form-control {
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-card);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.15rem rgba(105, 61, 20, 0.25);
+    outline: none;
+}
+
+/* Dados */
+p.form-control-plaintext {
+    background-color: #f7f7f7;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+/* Mensagem Sem Cadastro */
+p.form-control-plaintext.sem-cadastro {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    color: #a05f26;
+    font-weight: 500;
+}
+
+/* ====== Botão ====== */
+.text a {
+    display: inline-block;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    padding: 8px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    margin-top: 16px;
+}
+
+.text a:hover {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    border-color: var(--hover-color);
+}
+
+.btn-salvar {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    border: 2px solid var(--primary-color);
+    padding: 8px 24px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    margin-top: 16px;
+}
+
+.btn-salvar:hover {
+    background-color: var(--hover-color);
+    color: var(--primary-color);
+    border-color: var(--hover-color);
+}
+
+/* ====== Responsividade ====== */
+@media (max-width: 576px) {
+    .container {
+        max-width: 90%;
+    }
+    label {
+        margin-bottom: 4px;
+    }
+    .text {
+        text-align: center;
+    }
+}
