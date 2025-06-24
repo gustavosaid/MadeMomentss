@@ -1,0 +1,188 @@
+:root {
+    --bg-color: #f9f7f4;
+    --primary-color: #693d14;
+    --hover-color: #d4b499;
+    --text-color: #333;
+    --border-color: #ddd;
+    --bg-card: #fefcf9; 
+    --font-family: 'Segoe UI', sans-serif;
+}
+
+/* ----- ESTILO GERAL ----- */
+
+body {
+    background-color: var(--bg-color);
+    font-family: var(--font-family);
+    color: var(--text-color);
+}
+ 
+/* ----- CONTAINER PRINCIPAL ----- */
+
+
+.produto-detalhe-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 32px;
+    background-color: var(--bg-card);
+    border-radius: 24px; /* mais arredondado */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04); /* sombra sutil */
+    gap: 40px;
+}
+
+/* ----- BLOCO DA IMAGEM ----- */
+
+.produto-card-imagem {
+    flex: 1;
+    max-width: 500px;
+}
+
+.imagem-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.card-imagem {
+    background-color: var(--bg-card);
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.imagem-produto-card {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+/* ----- BLOCO DE INFORMAÇÕES ----- */
+
+.produto-info-bloco {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 280px;
+}
+
+.breadcrumbs {
+    font-size: 14px;
+    color: #888;
+}
+
+.produto-titulo {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.produto-preco span {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.produto-descricao {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #555;
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+}
+
+/* ----- FORMULÁRIO DE COMPRA ----- */
+
+.form-compra {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+/* ----- QUANTIDADE E COMPRAR ----- */
+
+.quantidade-bloco {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-quantidade {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--border-color);
+    background-color: #fff;
+    color: var(--primary-color);
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-quantidade:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.btn-quantidade:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.btn-quantidade:hover {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+}
+
+.input-quantidade {
+    width: 60px;
+    height: 40px;
+    text-align: center;
+    font-size: 16px;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-left: none;
+    border-right: none;
+    border-radius: 0;
+}
+
+/* Remove setas do input number */
+.input-quantidade::-webkit-outer-spin-button,
+.input-quantidade::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ----- BOTÃO DE COMPRAR ----- */
+
+.btn-comprar {
+    height: 42px;
+    padding: 0 20px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-comprar:hover {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+}

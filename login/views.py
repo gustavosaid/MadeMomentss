@@ -68,7 +68,7 @@ def cadastrar_endereco(request):
     context = {'endereco': endereco}
     return render(request, 'login/endereco.html', context)
 
-
+@csrf_exempt
 @login_required
 def visualizar_perfil(request):
     usuario = request.user
