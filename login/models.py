@@ -4,22 +4,24 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 
 class UsuarioManager(BaseUserManager):
-    def create_user(self, email, nome, senha=None, **extra_fields):
+    def create_user(self, email, nome, password=None, **extra_fields):
         if not email:
             raise ValueError('O email deve ser fornecido.')
         email = self.normalize_email(email)
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_staff', False)
+
         user = self.model(email=email, nome=nome, **extra_fields)
-        user.set_password(senha)
+        user.set_password(password)  # Corrigido
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, nome, senha=None, **extra_fields):
+    def create_superuser(self, email, nome, password=None, **extra_fields):
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        return self.create_user(email, nome, senha, **extra_fields)
+
+        return self.create_user(email, nome, password, **extra_fields)
 
 class Create_User(AbstractBaseUser, PermissionsMixin):
     nome = models.CharField(max_length=100)

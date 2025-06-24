@@ -17,7 +17,7 @@ from io import BytesIO
 import base64
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-
+from django.contrib.auth import authenticate
 
 def login_view(request):
     return render(request, 'login/login.html')
@@ -25,8 +25,6 @@ def login_view(request):
 
 def conta(request):
     return render(request, 'login/cadastro.html')
-
-
 
 @csrf_exempt
 @login_required
@@ -139,16 +137,11 @@ def loja(request):
     return render(request, 'loja/home.html', context)
 
 
-from django.contrib.auth import login
-from django.shortcuts import redirect
-from django.contrib import messages
-from .models import Create_User
-
 def cadastrar_usuario(request):
     if request.method == "POST":
         nome = request.POST.get("nome")
         email = request.POST.get("email")
-        senha = request.POST.get("senha")
+        senha = request.POST.get("password")  
         telefone = request.POST.get("telefone")
         cpf = request.POST.get("cpf")
 
@@ -164,12 +157,13 @@ def cadastrar_usuario(request):
             novo_usuario = Create_User.objects.create_user(
                 email=email,
                 nome=nome,
-                senha=senha,
+                password=senha,  
                 telefone=telefone,
                 cpf=cpf,
                 mfa_secret=pyotp.random_base32(),
                 mfa_enabled=True
             )
+
             if novo_usuario.mfa_enabled:
                 img_str = gerar_qrcode_para(novo_usuario)
                 request.session['temp_user_id'] = novo_usuario.id
@@ -183,6 +177,7 @@ def cadastrar_usuario(request):
             auth_login(request, novo_usuario)
             messages.success(request, "Cadastro realizado com sucesso!")
             return redirect('loja')
+
         except Exception as e:
             messages.error(request, f"Erro ao cadastrar: {e}")
             return redirect('conta')
@@ -193,27 +188,20 @@ def cadastrar_usuario(request):
 def login_usuario(request):
     if request.method == "POST":
         email = request.POST.get("email")
-        senha = request.POST.get("senha")
+        senha = request.POST.get("password")
 
-        try:
-            usuario = Create_User.objects.get(email=email)
+        usuario = authenticate(request, email=email, password=senha)
 
-            if usuario.check_password(senha):
-                # Login direto sem 2FA
-                request.session['usuario_id'] = usuario.id
-                auth_login(request,usuario)
-                messages.success(request, f"Bem-vindo, {usuario.nome}!")
-                return redirect('loja')
-
-            else:
-                messages.error(request, "Senha incorreta.")
-                return redirect('login')
-
-        except Create_User.DoesNotExist:
-            messages.error(request, "E-mail não cadastrado.")
+        if usuario is not None:
+            auth_login(request, usuario)
+            request.session['usuario_id'] = usuario.id
+            messages.success(request, f"Bem-vindo, {usuario.nome}!")
+            return redirect('loja')
+        else:
+            messages.error(request, "E-mail ou senha incorretos.")
             return redirect('login')
 
-    return redirect('login')
+    return render(request, 'loja/home.html')
 
 
 @csrf_exempt
