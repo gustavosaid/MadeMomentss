@@ -265,6 +265,12 @@ def logout_view(request):
         pass  # isso limpa as mensagens pendentes
     return redirect('login')
 
+from django.shortcuts import render
+
+def sobre(request):
+    return render(request, 'loja/sobre.html')
+
+
 
 # Formulário para o administrador adicionar novos pedidos
 @csrf_exempt

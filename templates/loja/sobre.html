@@ -1,0 +1,48 @@
+{% extends "navbar/base.html" %}
+{% load static %}
+
+{% block title %}Sobre - Made Moments{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}?v=5">
+<link rel="stylesheet" href="{% static 'css/sobre.css' %}?v=5">
+{% endblock %}
+
+{% block content %}
+<div class="sobre-container">
+    <div class="sobre-banner">
+        <h1>Sobre a Made Moments</h1>
+        <p>Transformamos memórias em presentes únicos.</p>
+    </div>
+
+    <div class="sobre-conteudo">
+        <div class="sobre-texto">
+            <h2>Nossa História</h2>
+            <p>
+                A <strong>Made Moments</strong> nasceu com a missão de tornar momentos simples em lembranças eternas. 
+                Apaixonados por registrar histórias, criamos kits personalizados que incluem fotos no estilo polaroid, 
+                itens decorativos e detalhes feitos especialmente para quem você ama.
+            </p>
+
+            <h2>O que fazemos?</h2>
+            <p>
+                Produzimos <strong>kits personalizados</strong> perfeitos para presentear em qualquer ocasião. Cada detalhe 
+                é pensado com carinho, desde a escolha das fotos até os elementos que acompanham cada caixa. 
+                Aqui, cada cliente é único, e cada pedido carrega uma história.
+            </p>
+
+            <h2>Por que escolher a Made Moments?</h2>
+            <ul>
+                <li>Produtos feitos à mão, com amor e cuidado.</li>
+                <li>Personalização completa do seu kit.</li>
+                <li>Fotos estilo polaroid de alta qualidade.</li>
+                <li>Perfeito para presentear e eternizar momentos.</li>
+            </ul>
+        </div>
+
+        <div class="sobre-imagem">
+            <img src="{% static 'img/logo-icon/img-sobre.png' %}" alt="Kits personalizados Made Moments">
+        </div>
+    </div>
+</div>
+{% endblock %}

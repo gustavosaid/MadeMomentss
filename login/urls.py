@@ -17,6 +17,7 @@ urlpatterns = [
     path('pedido/novo/', criar_pedido, name='criar_pedido'), # Criar novo pedido
     path('perfil/', visualizar_perfil, name='visualizar_perfil'), # Criar novo pedido
     path('endereco/', cadastrar_endereco, name='cadastrar_endereco'), # Criar novo pedido
+    path('sobre/', views.sobre, name='sobre'), #pagina sobre
 
     # Parte do carrinho
     path('pedido/<int:pedido_id>/', views.detalhe_pedido, name='detalhe_pedido'), # Detalhes ao clicar em comprar
