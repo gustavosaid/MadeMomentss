@@ -1,5 +1,11 @@
 {% extends 'navbar/base.html' %}
 
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/admin/adm.css' %}?v=1">
+{% endblock %}
+
 {% block content %}
   <div class="container my-4">
     <h1 class="text-center mb-4">Painel de Administração</h1>
@@ -19,10 +25,10 @@
               <h5 class="card-title">{{ pedido.nome }}</h5>
               <p class="card-text text-muted">{{ pedido.descricao }}</p>
               <div class="d-flex justify-content-between align-items-center">
-                <a href="{% url 'editar_pedido' pedido.id %}" class="btn btn-warning btn-sm">
+                <a href="{% url 'editar_pedido' pedido.id %}" class="btn btn-secondary btn-sm">
                   <i class="bi bi-pencil-square me-2"></i>Editar
                 </a>
-                <a href="{% url 'excluir_pedido' pedido.id %}" class="btn btn-danger btn-sm">
+                <a href="{% url 'excluir_pedido' pedido.id %}" class="btn btn-primary btn-sm">
                   <i class="bi bi-trash me-2"></i>Excluir
                 </a>
               </div>
