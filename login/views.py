@@ -1,32 +1,30 @@
-from hashlib import scrypt
-from pyexpat.errors import messages
-from django.shortcuts import redirect, render
-from .models import Create_User, Pedido, Endereco
-from django.contrib.auth.hashers import make_password #criptografar senha
-from django.contrib import messages 
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth import logout
-from .forms import PedidoForm
-from django.shortcuts import get_object_or_404, redirect
-from django.views.decorators.csrf import csrf_exempt
-from login.api_mercadoPago import gerar_link_pagamento
-from django.contrib.auth import login as auth_login
+# Bibliotecas do 2FA
+import base64
+from io import BytesIO
 import pyotp
 import qrcode
-from io import BytesIO
-import base64
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate
+# Django - Autenticação e usuários
+from django.contrib import messages
+from django.contrib.auth import authenticate, logout
+from django.contrib.auth import login as auth_login
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.hashers import check_password, make_password
+# Django - Atalhos e ferramentas
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.csrf import csrf_exempt
+# App local
+from .models import Create_User, Endereco, Pedido
+from .forms import PedidoForm
+from login.api_mercadoPago import gerar_link_pagamento
+
 
 def login_view(request):
     return render(request, 'login/login.html')
 
-
 def conta(request):
     return render(request, 'login/cadastro.html')
 
-@csrf_exempt
 @login_required
 def cadastrar_endereco(request):
     usuario = request.user
@@ -136,7 +134,6 @@ def loja(request):
 
     return render(request, 'loja/home.html', context)
 
-
 def cadastrar_usuario(request):
     if request.method == "POST":
         nome = request.POST.get("nome")
@@ -184,7 +181,6 @@ def cadastrar_usuario(request):
 
     return redirect('conta')
 
-@csrf_exempt
 def login_usuario(request):
     if request.method == "POST":
         email = request.POST.get("email")
@@ -257,7 +253,6 @@ def gerar_qrcode_para(usuario):
     img_str = base64.b64encode(buffered.getvalue()).decode()
     return img_str
 
-
 def logout_view(request):
     logout(request)
     storage = messages.get_messages(request)
@@ -265,15 +260,10 @@ def logout_view(request):
         pass  # isso limpa as mensagens pendentes
     return redirect('login')
 
-from django.shortcuts import render
-
 def sobre(request):
     return render(request, 'loja/sobre.html')
 
-
-
 # Formulário para o administrador adicionar novos pedidos
-@csrf_exempt
 def criar_pedido(request):
     if request.method == 'POST':
         form = PedidoForm(request.POST, request.FILES)
@@ -285,16 +275,12 @@ def criar_pedido(request):
         form = PedidoForm()
     return render(request, 'loja/add_pedido.html', {'form': form})
 
-
 # Leva para a página de detalhes do pedido ao clicar em comprar
-@csrf_exempt
 def detalhe_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
     return render(request, 'loja/detalhe_pedido.html', {'pedido': pedido})
 
-
 # Leva para a página de adicionar ao carrinho e escolher a quantidade que vai ser comprada
-@csrf_exempt
 def add_carrinho(request, pedido_id):
     if request.method == 'POST':
         quantidade = int(request.POST.get('quantidade', 1))
@@ -312,7 +298,6 @@ def add_carrinho(request, pedido_id):
 
     # # ✅ Redireciona caso o método não seja POST
     # return redirect('home')  # ou qualquer página que faça sentido
-
 
 def ver_carrinho(request):
     carrinho = request.session.get('carrinho', {})
@@ -336,37 +321,54 @@ def ver_carrinho(request):
 
     return render(request, 'loja/itens_carrinho.html', context)
 
-
-@csrf_exempt
 def remover_carrinho(request, pedido_id):
     carrinho = request.session.get('carrinho', {})
-
+    
     if str(pedido_id) in carrinho:
         del carrinho[str(pedido_id)]
         request.session['carrinho'] = carrinho
 
     return redirect('ver_carrinho')
 
+def remover_uma_unidade(request, pedido_id):
+    carrinho = request.session.get('carrinho', {})
+    pedido_id_str = str(pedido_id)
+
+    if pedido_id_str in carrinho:
+        if carrinho[pedido_id_str] > 1:
+            carrinho[pedido_id_str] -= 1
+            request.session['carrinho'] = carrinho
+
+    return redirect('ver_carrinho')
 
 def pagamento_certo(request):
-    return render(request, 'loja/mercado_pagoCerta.html')
+    payment_id = request.GET.get('payment_id')
+    status = request.GET.get('status')
+    external_reference = request.GET.get('external_reference')
 
+    ids = external_reference.split(",") if external_reference else []
+    pedidos = []
+
+    for pedido_id in ids:
+        try:
+            pedido = Pedido.objects.get(id=pedido_id)
+            pedido.status_pagamento = status
+            pedido.mercado_pago_id = payment_id
+            pedido.save()
+            pedidos.append(pedido)
+        except Pedido.DoesNotExist:
+            continue
+
+    return render(request, 'loja/mercado_pagoCerta.html', {
+        'pedidos': pedidos,
+        'payment_id': payment_id,
+        'status': status
+    })
 
 def pagamento_errado(request):
     return render(request, 'loja/mercado_pagoErrada.html')
 
-
-
-###LUIS HENRIQUE ZAZAZAZZZZZZ E ZAZZ O CODIGO FIUNCIONAR - LOKO SONHADOR E ZAZZZZ
-###### ARRUMAR OS MEUS IMPORTS QUEM MEXER NISSO AQUI POR FAVOR JOGAR TODOS FROM PARA O TOPO DO ARQUVIO
-
-from django.contrib.auth.decorators import login_required, user_passes_test
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Pedido
-from .forms import PedidoForm  
-
-
+#Parte do Painel do Admin feito por -> Luis Henrique(ZAZ)
 def is_admin(user):
     return getattr(user, 'is_staff', False)
 
@@ -377,7 +379,7 @@ def painel_admin(request):
     pedidos = Pedido.objects.all()
     return render(request, 'admin/painel_admin.html', {'pedidos': pedidos})
 
-# ADD PRODUTOZZZZZZZZZZ
+#Adicionar Produtor
 @csrf_exempt
 @login_required
 @user_passes_test(is_admin, login_url='loja')
@@ -395,7 +397,7 @@ def adicionar_pedido(request):
     
     return render(request, 'admin/adicionar_pedido.html', {'form': form, 'titulo': 'Adicionar Pedido'})
 
-# EDITAR PRODUTOZZZZZZZZZ
+#Edita Produto
 @csrf_exempt
 @login_required
 @user_passes_test(is_admin, login_url='loja')
@@ -415,7 +417,7 @@ def editar_pedido(request, pedido_id):
 
     return render(request, 'admin/editar_pedido.html', {'form': form, 'pedido': pedido, 'titulo': 'Editar Pedido'})
 
-# EXCLUIR PRODUTOZZZZZZZZ
+#Excluir Produtor
 @csrf_exempt
 @login_required
 @user_passes_test(is_admin, login_url='loja')

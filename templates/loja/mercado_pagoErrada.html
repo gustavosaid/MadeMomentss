@@ -1,1 +1,14 @@
-<h1> deu errado</h1>
+{% extends "navbar/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/pagamento_erro.css' %}">
+
+<div class="erro-container">
+    <div class="erro-card">
+        <h1>Pagamento Não Finalizado</h1>
+        <p>Ocorreu um problema ao processar o seu pagamento. Por favor, tente novamente ou retorne à página inicial.</p>
+        <a href="{% url 'loja' %}" class="btn-voltar">Voltar para a Home</a>
+    </div>
+</div>
+{% endblock %}

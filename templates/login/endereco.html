@@ -43,9 +43,11 @@
             <a href="{% url 'loja' %}" class="voltar">
                 <i class="bi bi-arrow-left"></i> Continuar comprando
             </a>
-            <button type="submit" class="salvar">
-                <i class="bi bi-save"></i> Salvar Endereço
+            
+            <button onclick="finalizarCompra()">
+                Finalizar Compra
             </button>
+
         </div>
     </form>
     <script>
@@ -71,6 +73,28 @@
                         alert('Erro ao buscar o CEP.');
                     });
             });
+
+
+        function finalizarCompra() {
+            fetch("{% url 'pagar' %}")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.link_pagamento) {
+                        // Abre Mercado Pago em nova aba
+                        window.open(data.link_pagamento, '_blank');
+
+                        // Redireciona site para rota desejada
+                        window.location.href = data.redirect_local;
+                    } else {
+                        alert('Erro ao gerar pagamento');
+                        console.log(data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+        }
+
         </script>
 
     {% if messages %}

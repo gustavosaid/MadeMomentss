@@ -1,0 +1,59 @@
+:root {
+    --bg-color: #eeeee6;
+    --primary-color: #693d14;
+    --hover-color: #d4b499;
+    --text-color: #554037;
+    --border-color: #d9d0c1;
+    --bg-card: #fdfbf9; 
+    --font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: var(--font-family);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+.sucesso-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.sucesso-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.sucesso-card h1 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.sucesso-card p {
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.btn-whatsapp {
+    background-color: #25D366;
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    display: inline-block;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1ebe5b;
+}

@@ -2,7 +2,7 @@ from django.urls import path
 from login import views
 from login.views import (login_view, conta, cadastrar_usuario, loja, login_usuario, logout_view, criar_pedido,
                         add_carrinho, ver_carrinho, remover_carrinho, pagamento_certo, pagamento_errado,
-                        visualizar_perfil, cadastrar_endereco)
+                        visualizar_perfil, cadastrar_endereco,remover_uma_unidade)
 from login.api_mercadoPago import gerar_link_pagamento
 
 urlpatterns = [
@@ -24,6 +24,7 @@ urlpatterns = [
     path('pedido/<int:pedido_id>/add_carrinho/', add_carrinho, name='add_carrinho'), # Escolher quantidade a ser adicionada ao carrinho
     path('carrinho/', ver_carrinho, name='ver_carrinho'),
     path('removerCarrinho/<int:pedido_id>/', remover_carrinho, name='remover_carrinho'),
+    path('remover_uma_unidade/<int:pedido_id>/',remover_uma_unidade, name='remover_uma_unidade'),
     path('compracerta/', pagamento_certo, name='pagamento_certo'),
     path('compraerrada/', pagamento_errado, name='pagamento_errado'),
     path('pagar/', gerar_link_pagamento, name='pagar'),

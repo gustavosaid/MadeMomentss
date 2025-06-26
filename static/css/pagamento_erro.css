@@ -1,0 +1,58 @@
+:root {
+    --bg-color: #eeeee6;
+    --primary-color: #693d14;
+    --hover-color: #d4b499;
+    --text-color: #554037;
+    --border-color: #d9d0c1;
+    --bg-card: #fdfbf9; 
+    --font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: var(--font-family);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+.erro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.erro-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.erro-card h1 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.erro-card p {
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.btn-voltar {
+    background-color: var(--primary-color);
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.btn-voltar:hover {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+}

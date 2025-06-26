@@ -1,1 +1,21 @@
-<h1> deu certo </h1>
+{% extends "navbar/base.html" %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/pagamento_sucesso.css' %}">
+
+<div class="sucesso-container">
+    <div class="sucesso-card">
+        <h1>Pagamento Aprovado ✅</h1>
+        <p>Agora que você completou o pedido, envie fotos para cada produto através do link abaixo:</p>
+
+        {% for pedido in pedidos %}
+            <a href="https://wa.me/5534992385880?text=Olá!%20Finalizei%20meu%20pedido%20(nº%20{{ pedido.id }})%20e%20vou%20enviar%20as%20fotos%20dos%20produtos."
+               class="btn-whatsapp" target="_blank">
+                Enviar Fotos do Pedido {{ pedido.id }} no WhatsApp
+            </a>
+            <br><br>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

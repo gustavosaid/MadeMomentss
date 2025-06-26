@@ -60,8 +60,13 @@ class Pedido(models.Model):
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     data_criacao = models.DateTimeField(auto_now_add=True)
 
+    # Campos de controle de pagamento
+    status_pagamento = models.CharField(max_length=20, default='pendente')
+    mercado_pago_id = models.CharField(max_length=100, null=True, blank=True)
+
     def __str__(self):
         return f"{self.descricao[:30]} - R${self.valor}"
+
 
 class Carrinho(models.Model):
     usuario = models.ForeignKey(Create_User, on_delete=models.CASCADE)
@@ -79,3 +84,4 @@ class Endereco(models.Model):
 
     def __str__(self):
         return f'{self.endereco}, {self.numero} - {self.bairro}'
+    
