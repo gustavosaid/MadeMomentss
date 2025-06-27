@@ -181,6 +181,7 @@ def cadastrar_usuario(request):
 
     return redirect('conta')
 
+@csrf_exempt
 def login_usuario(request):
     if request.method == "POST":
         email = request.POST.get("email")

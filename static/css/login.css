@@ -1,0 +1,115 @@
+:root {
+    --bg-color: #eeeee6;
+    --primary-color: #693d14;
+    --hover-color: #d4b499;
+    --text-color: #554037;
+    --border-color: #d9d0c1;
+    --bg-card: #fdfbf9; 
+    --font-family: 'Segoe UI', sans-serif;
+}
+
+
+body {
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    height: 100vh; 
+    margin: 0;
+    background-color: var(--bg-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+.login-card {
+    width: 500px;
+    padding: 1.5rem; 
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+    border-radius: 10px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 12px 28px rgba(105, 61, 20, 0.1);
+    padding: 40px;
+    border-radius: 18px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+
+.login-logo {
+    width: 200px;
+    height: 150px;
+    object-fit: contain;
+}
+
+.btn{
+    background-color: var(--primary-color);
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover,
+.btn:focus,
+.btn:active {
+    background-color: var(--hover-color);
+    color: var(--text-color);
+    outline: none;
+    box-shadow: none;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; 
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.form label {
+    font-weight: 500;
+    margin-bottom: 0.4rem; 
+    font-size: 0.9rem;
+}
+
+.form input {
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: var(--font-family);
+    background-color: #fff;
+    color: var(--text-color);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(105, 61, 20, 0.2);
+}
+
+
+.d-grid {
+    display: grid;
+}
+
+
+.gap-4 {
+    gap: 1.5rem; 
+}
+
+
+.mt-3 {
+    margin-top: 1rem;
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+
+.w-100 {
+    width: 100%;
+}
