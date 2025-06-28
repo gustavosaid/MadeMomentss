@@ -134,6 +134,7 @@ def loja(request):
 
     return render(request, 'loja/home.html', context)
 
+@csrf_exempt
 def cadastrar_usuario(request):
     if request.method == "POST":
         nome = request.POST.get("nome")
