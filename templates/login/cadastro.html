@@ -6,39 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Página de Cadastro</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Estilo básico do toast */
-        .toast {
-            width: 300px;
-            background-color: #f8d7da;
-            color: #721c24;
-            border-radius: 0.25rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.1);
-            padding: 10px;
-            font-size: 14px;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1050;
-            display: none;
-            text-align: center;
-        }
-        .toast-body {
-            font-weight: normal;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/cadastro.css' %}">
 </head>
-<body class="d-flex justify-content-center align-items-center vh-100 bg-light">
 
-    <div class="card p-4 shadow-lg" style="width: 400px; border-radius: 10px;">
-        <nav class="navbar bg-body">
+<body>
+
+    <div class="cadastro-card">
+        <nav class="navbar">
             <div class="container-fluid justify-content-center">
-                <img src="/static/img/logo-icon/logo2.png" alt="Logo" width="180" height="130">
+                <img src="/static/img/logo-icon/logo2.png" alt="Logo"
+                    class="cadastro-logo d-inline-block align-text-top">
             </div>
         </nav>
-
-        <h2 class="text-center mb-2">Cadastro</h2>
         
         <form action="{% url 'cadastrar_usuario' %}" method="post" onsubmit="return validarFormulario()">
             {% csrf_token %}
@@ -51,29 +30,30 @@
                 </ul>
             {% endif %}
 
-            <div class="mb-3">
-                <input id="nome" name="nome" type="text" class="form-control" placeholder="Nome Completo" required>
+           <div class="form">
+                <div>
+                    <input id="nome" name="nome" type="text" class="form-control" placeholder="Nome Completo" required>
+                </div>
+                <div>
+                    <input id="cpf" name="cpf" type="text" class="form-control" placeholder="CPF" required maxlength="11">
+                </div>
+                <div>
+                    <input id="email" name="email" type="email" class="form-control" placeholder="E-mail" required>
+                </div>
+                <div>
+                    <input id="telefone" name="telefone" type="text" class="form-control" placeholder="Telefone" required maxlength="11">
+                </div>
+                <div>
+                    <input id="senha" name="senha" type="password" class="form-control" placeholder="Senha" required>
+                </div>
             </div>
-            <div class="mb-3">
-                <input id="cpf" name="cpf" type="text" class="form-control" placeholder="CPF" required maxlength="11">
+            <div class="d-grid gap-4 mt-3">
+                <button type="submit" class="btn w-100">Cadastrar</button>
             </div>
-            <div class="mb-3">
-                <input id="email" name="email" type="email" class="form-control" placeholder="E-mail" required>
-            </div>
-            <div class="mb-3">
-                <input id="telefone" name="telefone" type="text" class="form-control" placeholder="Telefone" required maxlength="11">
-            </div>
-            
-
-            <div class="mb-3">
-                <input id="senha" name="senha" type="password" class="form-control" placeholder="Senha" required>
-            </div>
-
-            <button type="submit" class="btn btn-outline-success w-100">Cadastrar</button>
         </form>
 
         <div class="d-grid gap-4 mt-3">
-            <a href="{% url 'login' %}" class="btn btn-outline-secondary w-100">Voltar</a>
+            <a href="{% url 'login' %}" class="btn w-100">Voltar</a>
         </div>
     </div>
 
