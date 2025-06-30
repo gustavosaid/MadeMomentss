@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
+from encrypted_model_fields.fields import EncryptedCharField
 
 class UsuarioManager(BaseUserManager):
     def create_user(self, email, nome, password=None, **extra_fields):
@@ -25,7 +26,7 @@ class UsuarioManager(BaseUserManager):
 
 class Create_User(AbstractBaseUser, PermissionsMixin):
     nome = models.CharField(max_length=100)
-    cpf = models.CharField(max_length=14, unique=True, null=True, blank=True)
+    cpf = EncryptedCharField(max_length=14, unique=True, null=True, blank=True)
     email = models.EmailField(unique=True)
     telefone = models.CharField(max_length=20, null=True, blank=True)
     role = models.CharField(

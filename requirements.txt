@@ -1,11 +1,15 @@
 asgiref==3.8.1
 certifi==2025.4.26
+cffi==1.17.1
 charset-normalizer==3.4.2
+cryptography==45.0.4
 Django==5.2.1
+django-encrypted-model-fields==0.6.5
 dotenv==0.9.9
 idna==3.10
 mercadopago==2.3.0
 pillow==11.2.1
+pycparser==2.22
 pyotp==2.9.0
 python-dotenv==1.1.0
 qrcode==8.2

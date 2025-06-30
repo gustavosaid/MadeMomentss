@@ -26,6 +26,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
+#CHAVE SECRETA PARA CRIPTOGRAFIA DO CPF
+FIELD_ENCRYPTION_KEY = 'pohV4JK2j390jGC5X9LGn9kW2ZYbbkiSCCQENhsbrJI='
+
 CSRF_TRUSTED_ORIGINS = [
     "https://b625-74-249-85-198.ngrok-free.app",  # se estiver usando ngrok
     "https://localhost:8091",    # seu ambiente local
