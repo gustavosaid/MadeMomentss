@@ -4,87 +4,92 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}MadeMoments{% endblock %}</title>
-    <link rel="icon" href="{% static 'img/logo-icon/logo-ico.ico' %}" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/navbar.css' %}?v=5">
-    <link rel="stylesheet" href="{% static 'css/footer.css' %}?v=5">
-    {% block head %}{% endblock %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MadeMoments{% endblock %}</title>
+  <link rel="icon" href="{% static 'img/logo-icon/logo-ico.ico' %}" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/navbar.css' %}?v=5">
+  <link rel="stylesheet" href="{% static 'css/footer.css' %}?v=5">
+  {% block head %}{% endblock %}
 </head>
 
-<body style="background-color: #eeeee6;">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg custom-navbar">
-        <div class="container-fluid">
-            <!-- Logo -->
-            <a class="navbar-brand custom-logo" href="/">
-                <img src="{% static 'img/logo-icon/logo2.png' %}" alt="Logo" class="img-logo">
-            </a>
+<body class="d-flex flex-column min-vh-100" style="background-color: #eeeee6;">
 
-            <!-- Ícones -->
-            <div class="d-flex align-items-center">
-                <a href="{% url 'sobre' %}" class="icon-link">
-                    <span class="sobre_nos">SOBRE</span>
-                </a>
-                <a href="{% url 'ver_carrinho' %}" class="icon-link">
-                    <i class="bi bi-bag-heart"></i>
-                    <span class="num_carrinho">({{ total_itens_carrinho }})</span>
-                </a>
-                <a href="{% url 'visualizar_perfil' %}" class="icon-link">
-                    <i class="bi bi-person-circle"></i>
-                </a>
-                <a href="{% url 'logout' %}" class="icon-link">
-                    <i class="bi bi-box-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-    </nav>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+      <!-- Logo -->
+      <a class="navbar-brand custom-logo" href="/">
+        <img src="{% static 'img/logo-icon/logo2.png' %}" alt="Logo" class="img-logo">
+      </a>
 
-    <!-- Conteúdo principal -->
+      <!-- Ícones -->
+      <div class="d-flex align-items-center icons">
+        {% if request.user.is_superuser %}
+        <a href="{% url 'painel_admin' %}" class="icon-link">
+          <span class="sobre_nos">Painel ADM</span>
+        </a>
+        {% endif %}
+        <a href="{% url 'sobre' %}" class="icon-link">
+          <span class="sobre_nos">SOBRE</span>
+        </a>
+        <a href="{% url 'ver_carrinho' %}" class="icon-link">
+          <i class="bi bi-bag-heart"></i>
+          <span class="num_carrinho">({{ total_itens_carrinho }})</span>
+        </a>
+        <a href="{% url 'visualizar_perfil' %}" class="icon-link">
+          <i class="bi bi-person-circle"></i>
+        </a>
+        <a href="{% url 'logout' %}" class="icon-link">
+          <i class="bi bi-box-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Conteúdo principal -->
+  <main class="flex-fill">
     {% block content %}{% endblock %}
+  </main>
 
-    <!-- Footer -->
-    <footer class="footer mt-5 py-4">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <h5>Sobre nós</h5>
-                    <p>Trabalhamos com produtos personalizados, feitos com carinho para deixar seus momentos ainda mais especiais.</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <h5>Contato</h5>
-                    <p>Email: atendimento@seudominio.com</p>
-                    <p>Telefone: (11) 99999-9999</p>
-                    <p>Endereço: Patos de Minas - MG</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <!-- No bloco "Contato" -->
-                    <div class="social-icons mt-3">
-                    <a href="https://www.instagram.com/made__moments/" target="_blank">
-                        <img src="{% static 'img/logo-icon/instagram.png' %}" alt="Instagram" class="icon">
-                    </a>
-                    <a href="https://wa.me/5511999999999" target="_blank">
-                        <img src="{% static 'img/logo-icon/whatsapp.png' %}" alt="WhatsApp" class="icon">
-                    </a>
-                    <a href="" target="_blank">
-                        <img src="{% static 'img/logo-icon/mercado-pago.png' %}"
-                            alt="Mercado Pago – selo oficial" class="icon selo oficial">
-                    </a>
-                    </div>
-                </div>
-            </div>
-            
-            <hr>
-            <div class="text-center">
-                <p class="mb-0">&copy; 2025 - Todos os direitos reservados | Made Moments</p>
-            </div>
+  <!-- Footer -->
+  <footer class="footer mt-auto py-4">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <h5>Sobre nós</h5>
+          <p>Trabalhamos com produtos personalizados, feitos com carinho para deixar seus momentos ainda mais especiais.</p>
         </div>
-    </footer>
+        <div class="col-md-4 mb-3">
+          <h5>Contato</h5>
+          <p>Email: suporte@mademoments.com</p>
+          <p>Telefone: (34) 99999-9999</p>
+          <p>Endereço: Patos de Minas - MG</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="social-icons mt-3">
+            <a href="https://www.instagram.com/made__moments/" target="_blank">
+              <img src="{% static 'img/logo-icon/instagram.png' %}" alt="Instagram" class="icon">
+            </a>
+            <a href="https://wa.me/5511999999999" target="_blank">
+              <img src="{% static 'img/logo-icon/whatsapp.png' %}" alt="WhatsApp" class="icon">
+            </a>
+            <a href="#" target="_blank">
+              <img src="{% static 'img/logo-icon/mercado-pago.png' %}" alt="Mercado Pago" class="icon selo oficial">
+            </a>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="text-center">
+        <p class="mb-0">&copy; 2025 - Todos os direitos reservados | Made Moments</p>
+      </div>
+    </div>
+  </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

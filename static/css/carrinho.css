@@ -7,6 +7,9 @@
         background-color: #fff0f5; /* rosa claro no fundo */
     }
 
+    .container.mt-5{
+        margin-bottom: 150px;
+    }
     .cart-card {
         background-color: var(--bg-color);
         border-radius: 12px;
@@ -57,4 +60,3 @@
         color: var(--text-color);
         border-color: var(--hover-color);
     }
-

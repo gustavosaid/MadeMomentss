@@ -25,6 +25,7 @@ def login_view(request):
 def conta(request):
     return render(request, 'login/cadastro.html')
 
+@csrf_exempt
 @login_required
 def cadastrar_endereco(request):
     usuario = request.user
@@ -277,11 +278,13 @@ def criar_pedido(request):
         form = PedidoForm()
     return render(request, 'loja/add_pedido.html', {'form': form})
 
+@csrf_exempt
 # Leva para a página de detalhes do pedido ao clicar em comprar
 def detalhe_pedido(request, pedido_id):
     pedido = get_object_or_404(Pedido, id=pedido_id)
     return render(request, 'loja/detalhe_pedido.html', {'pedido': pedido})
 
+@csrf_exempt
 # Leva para a página de adicionar ao carrinho e escolher a quantidade que vai ser comprada
 def add_carrinho(request, pedido_id):
     if request.method == 'POST':
@@ -301,6 +304,7 @@ def add_carrinho(request, pedido_id):
     # # ✅ Redireciona caso o método não seja POST
     # return redirect('home')  # ou qualquer página que faça sentido
 
+@csrf_exempt
 def ver_carrinho(request):
     carrinho = request.session.get('carrinho', {})
     itens = []
@@ -323,6 +327,7 @@ def ver_carrinho(request):
 
     return render(request, 'loja/itens_carrinho.html', context)
 
+@csrf_exempt
 def remover_carrinho(request, pedido_id):
     carrinho = request.session.get('carrinho', {})
     
@@ -332,6 +337,7 @@ def remover_carrinho(request, pedido_id):
 
     return redirect('ver_carrinho')
 
+@csrf_exempt
 def remover_uma_unidade(request, pedido_id):
     carrinho = request.session.get('carrinho', {})
     pedido_id_str = str(pedido_id)
@@ -343,6 +349,7 @@ def remover_uma_unidade(request, pedido_id):
 
     return redirect('ver_carrinho')
 
+@csrf_exempt
 def pagamento_certo(request):
     payment_id = request.GET.get('payment_id')
     status = request.GET.get('status')
@@ -367,6 +374,7 @@ def pagamento_certo(request):
         'status': status
     })
 
+@csrf_exempt
 def pagamento_errado(request):
     return render(request, 'loja/mercado_pagoErrada.html')
 

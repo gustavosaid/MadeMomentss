@@ -25,9 +25,9 @@ def gerar_link_pagamento(request):
         "items": items,
         "external_reference": ",".join([str(pid) for pid in carrinho.keys()]),  # suporta múltiplos pedidos
         "back_urls": {
-            "success": "https://b625-74-249-85-198.ngrok-free.app/compracerta/",
-            "pending": "https://b625-74-249-85-198.ngrok-free.app/compraerrada/",
-            "failure": "https://b625-74-249-85-198.ngrok-free.app/compraerrada/",
+            "success": "https://73d4-135-237-130-230.ngrok-free.app/compracerta/",
+            "pending": "https://73d4-135-237-130-230.ngrok-free.app/compraerrada/",
+            "failure": "https://73d4-135-237-130-230.ngrok-free.app/compraerrada/",
         },
         "auto_return": "approved"
     }

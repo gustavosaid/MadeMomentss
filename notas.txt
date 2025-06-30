@@ -90,5 +90,5 @@ SENHA: admin
 
 ------------------------------------------
 Pra rodar com "hospedagem"
-./ngrop http 8091 - colocar a mesma porta que usar no -> python manage.py runserver 8091
+./ngrok http 8091 - colocar a mesma porta que usar no -> python manage.py runserver 8091
 

@@ -107,11 +107,33 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .carousel-inner {
-    height: 250px;
+    height: 300px;
   }
 }
+
+@media (max-width: 480px) {
+  .carousel-inner {
+    height: 220px;
+  }
+
+  .carousel-inner img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .carousel-caption {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.4);
+  }
+}
+
 
 /* 🌊 Animação das bolinhas no fundo */
 @keyframes pulse {
